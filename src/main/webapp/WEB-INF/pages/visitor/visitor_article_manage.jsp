@@ -32,7 +32,6 @@ layui.use(['table','jquery','layer'], function(){
   var table = layui.table;
   var layer = layui.layer;
   var $ = layui.jquery;
-
   //第一个实例
   table.render({
     elem: '#test'
@@ -48,11 +47,9 @@ layui.use(['table','jquery','layer'], function(){
       ,{field: 'topic', title: '主题'}
       ,{field: 'content', title: '内容'}
       ,{field: 'publish_time', title: '发布时间',sort: true}
-
         ]
       ]
   });
-
     //头工具栏事件
       table.on('toolbar(test)', function(obj){
         var checkStatus = table.checkStatus("test");
@@ -78,23 +75,18 @@ layui.use(['table','jquery','layer'], function(){
                                }else {
                                    alert(result.message);
                                }
-                               var index = parent.layer.getFrameIndex(window.name);
-                              parent.layer.close(index);
+                               layer.closeAll('dialog'); //关闭信息框,可以关闭，有效
                            }
                        })
                       }
                 ,function () {
                         layer.close(layer.index);
                     }
-
                 )
             }
             break;
         };
       });
-
-
-
 });
 </script>
 </body>

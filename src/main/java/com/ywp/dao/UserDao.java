@@ -1,6 +1,9 @@
 package com.ywp.dao;
 
+import com.ywp.entity.Property;
 import com.ywp.entity.User;
+import com.ywp.entity.User_park;
+import com.ywp.entity.Visitor_park;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -37,7 +40,6 @@ public interface UserDao {
                                   @Param("user_area")String user_area,@Param("user_carnumber")String user_carnumber);
 
 
-
     /**
        * 通过业主名称查找业主
        * @param user_name
@@ -46,4 +48,46 @@ public interface UserDao {
       public List<User> findUserByName(@Param("user_name")String user_name);
 
 
+
+    /**
+     * 业主个人信息更改（包括用户名）
+     * @param user
+     */
+    public void user_info_update(User user);
+
+
+    /**
+     * 业主个人信息保存（不包括用户名）
+     * @param user
+     */
+    public void user_info_save(User user);
+
+
+    /**
+     * 业主停车详情
+     * @param user_id
+     * @return
+     */
+    List<User_park> findUserParkByID(@Param("user_id")int user_id);
+
+    /**
+     *  通过业主ID查找业主停车账单
+     * @param user_id
+     * @return
+     */
+    public List<User_park> findUserParkCostByID(@Param("user_id")int user_id);
+
+    /**
+     * 通过业主ID查找业主物业账单
+     * @param user_id
+     * @return
+     */
+    List<Property> findUserPropertyCostByID(@Param("user_id")int user_id);
+
+
+    /**
+     * 业主缴纳物业费用
+     * @param property_id
+     */
+    void delivery_property(int property_id);
 }

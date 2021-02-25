@@ -69,7 +69,6 @@ public class VisitorController {
             return "visitor/visitor_info";
         }
         int visitor_id = (int)request.getSession().getAttribute("id");
-        System.out.println(visitor_id);
         Visitor visitor = new Visitor();
         visitor.setVisitor_id(visitor_id);
         visitor.setVisitor_name(visitor_name);
@@ -126,11 +125,22 @@ public class VisitorController {
         for(Visitor_park visitor_park:visitorParkCostList){
             if(visitor_park != null){
               //计算分钟
-              long minute = visitor_park.getPeriod()/60;
+              int minute = (int) visitor_park.getPeriod();
               visitor_park.setPeriod(minute);
               //计算金额
-              long money = (int) minute*5;
-              visitor_park.setCost(money);
+              int time1 = minute/60;
+              int time2 = minute%60;
+              //不足一小时
+              if(time1 == 0){
+                  visitor_park.setCost(5);
+              }else {
+                  if(time2 > 0){
+                      //超过1小时，不足2小时，算2小时
+                      time1 = time1+1;
+                  }
+                  //5元/h
+                  visitor_park.setCost(time1*5);
+              }
               if(visitor_park.getStatus().equals("1")){
                   visitor_park.setStatus("已缴费");
               }else {
@@ -209,17 +219,14 @@ public class VisitorController {
     }
 
 
+    /**
+     * 删除帖子
+     * @param article_ids
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/visitor_delete_article")
     public ResultData visitor_delete_article(@RequestParam(value="article_id",required = false) int[] article_ids){
-        for(Integer integer:article_ids){
-            if(integer == null){
-                System.out.println("null");
-            }else{
-                System.out.println(integer);
-            }
-
-        }
         visitorService.visitor_delete_article(article_ids);
         ResultData resultData = new ResultData();
         resultData.setMessage("成功");
@@ -229,7 +236,7 @@ public class VisitorController {
 
 
     /**
-     * 去个人信息页面
+     * 去游客个人信息页面
      * @return
      */
     @RequestMapping("/toVisitorInfo")

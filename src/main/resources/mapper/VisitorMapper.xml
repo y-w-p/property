@@ -70,7 +70,7 @@
 
     <!--通过游客ID查找游客停车账单-->
     <select id="findVisitorCostByID" parameterType="int" resultMap="visitorParkCostMap">
-        SELECT vc.cost_id, v.visitor_name, v.visitor_carnumber,vp.park_start_time,vp.park_end_time, TIMESTAMPDIFF(SECOND,park_start_time,park_end_time) AS period ,vc.status from visitor_park vp, visitor v , visitor_cost vc WHERE vp.visitor_id=#{visitor_id} and v.visitor_id=#{visitor_id} and vp.park_id = vc.park_id
+        SELECT vc.cost_id, v.visitor_name, v.visitor_carnumber,vp.park_start_time,vp.park_end_time, TIMESTAMPDIFF(minute,park_start_time,park_end_time) AS period ,vc.status from visitor_park vp, visitor v , visitor_cost vc WHERE vp.visitor_id=#{visitor_id} and v.visitor_id=#{visitor_id} and vp.park_id = vc.park_id
     </select>
 
     <!--游客个人信息修改(包括用户名)-->

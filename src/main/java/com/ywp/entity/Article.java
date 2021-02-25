@@ -16,7 +16,7 @@ public class Article implements Serializable {
     private String topic;
     private String content;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date publish_time;
 
     public int getArticle_id() {
