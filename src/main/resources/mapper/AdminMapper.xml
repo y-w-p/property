@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ywp.dao.AdminDao">
+    <resultMap id="adminMap" type="com.ywp.entity.Admin" >
+        <id column="admin_id" property="admin_id" jdbcType="INTEGER" />
+        <result column="admin_name" property="admin_name" jdbcType="VARCHAR" />
+        <result column="admin_password" property="admin_password" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <select id="adminLogin" parameterType="String" resultMap="adminMap">
+        select * from admin where admin_name=#{admin_name} and admin_name=#{admin_name}
+    </select>
+
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.ywp.dao.VisitorDao">
+    <resultMap id="visitorMap" type="com.ywp.entity.Visitor" >
+        <id column="visitor_id" property="visitor_id" jdbcType="INTEGER" />
+        <result column="visitor_name" property="visitor_name" jdbcType="VARCHAR" />
+        <result column="visitor_password" property="visitor_password" jdbcType="VARCHAR" />
+        <result column="visitor_phonenumber" property="visitor_phonenumber" jdbcType="VARCHAR" />
+        <result column="visitor_carnumber" property="visitor_carnumber" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="visitorParkMap" type="com.ywp.entity.Visitor_park" >
+           <id column="park_id" property="park_id" jdbcType="INTEGER" />
+           <result column="visitor_id" property="visitor_id" jdbcType="INTEGER" />
+            <result column="visitor_name" property="visitor_name" jdbcType="INTEGER" />
+            <result column="visitor_carnumber" property="visitor_carnumber" jdbcType="INTEGER" />
+           <result column="park_location" property="park_location" jdbcType="VARCHAR" />
+           <result column="park_start_time" property="park_start_time" jdbcType="TIMESTAMP" />
+           <result column="park_end_time" property="park_end_time" jdbcType="TIMESTAMP" />
+       </resultMap>
+
+    <resultMap id="visitorParkCostMap" type="com.ywp.entity.Visitor_park" >
+          <id column="cost_id" property="cost_id" jdbcType="INTEGER" />
+          <result column="visitor_id" property="visitor_id" jdbcType="INTEGER" />
+           <result column="visitor_name" property="visitor_name" jdbcType="INTEGER" />
+           <result column="visitor_carnumber" property="visitor_carnumber" jdbcType="INTEGER" />
+          <result column="park_start_time" property="park_start_time" jdbcType="TIMESTAMP" />
+          <result column="park_end_time" property="park_end_time" jdbcType="TIMESTAMP" />
+           <result column="park_id" property="park_id" jdbcType="INTEGER" />
+           <result column="period" property="period" jdbcType="BIGINT" />
+           <result column="status" property="status" jdbcType="VARCHAR" />
+          </resultMap>
+
+    <resultMap id="article" type="com.ywp.entity.Article" >
+              <id column="article_id" property="article_id" jdbcType="INTEGER" />
+              <result column="people_id" property="people_id" jdbcType="INTEGER" />
+               <result column="people_name" property="people_name" jdbcType="VARCHAR" />
+               <result column="topic" property="topic" jdbcType="VARCHAR" />
+              <result column="content" property="content" jdbcType="VARCHAR" />
+              <result column="publish_time" property="publish_time" jdbcType="TIMESTAMP" />
+
+    </resultMap>
+
+
+    <!--游客登录-->
+    <select id="visitorLogin" parameterType="String" resultMap="visitorMap">
+        select * from visitor where visitor_name=#{visitor_name} and visitor_password=#{visitor_password}
+    </select>
+
+    <!--游客注册-->
+   <insert id="visitorRegistered" parameterType="com.ywp.entity.Visitor" >
+    <selectKey keyProperty="visitor_id" keyColumn="visitor_id" resultType="int" order="AFTER">
+        select last_insert_id()
+    </selectKey>
+       insert into visitor(visitor_name,visitor_password,visitor_phonenumber,visitor_carnumber)values (#{visitor_name},#{visitor_password},#{visitor_phonenumber},#{visitor_carnumber})
+   </insert>
+
+    <!--通过游客名称查找游客-->
+    <select id="findVisitorByName" parameterType="String" resultType="com.ywp.entity.Visitor">
+        select * from visitor where visitor_name = #{visitor_name}
+    </select>
+
+   <!--通过游客ID查找游客停车记录-->
+    <select id="findVisitorParkByID" parameterType="int" resultMap="visitorParkMap">
+         select park_id,visitor_name,visitor_carnumber,park_location,park_start_time,park_end_time from visitor_park vp,visitor v where vp.visitor_id = #{visitor_id} and v.visitor_id = #{visitor_id}
+    </select>
+
+    <!--通过游客ID查找游客停车账单-->
+    <select id="findVisitorCostByID" parameterType="int" resultMap="visitorParkCostMap">
+        SELECT vc.cost_id, v.visitor_name, v.visitor_carnumber,vp.park_start_time,vp.park_end_time, TIMESTAMPDIFF(SECOND,park_start_time,park_end_time) AS period ,vc.status from visitor_park vp, visitor v , visitor_cost vc WHERE vp.visitor_id=#{visitor_id} and v.visitor_id=#{visitor_id} and vp.park_id = vc.park_id
+    </select>
+
+    <!--游客个人信息修改(包括用户名)-->
+    <update id="visitor_info_update" parameterType="com.ywp.entity.Visitor">
+        update visitor set visitor_name = #{visitor_name},visitor_password=#{visitor_password},visitor_phonenumber=#{visitor_phonenumber},visitor_carnumber=#{visitor_carnumber} where visitor_id=#{visitor_id}
+    </update>
+
+    <!--游客个人信息修改(不包括用户名)-->
+       <update id="visitor_info_save" parameterType="com.ywp.entity.Visitor">
+           update visitor set visitor_password=#{visitor_password},visitor_phonenumber=#{visitor_phonenumber},visitor_carnumber=#{visitor_carnumber} where visitor_id=#{visitor_id}
+       </update>
+
+    <!--查找所有文章-->
+    <select id="findArticleAll" resultType="com.ywp.entity.Article">
+        select * from article order by publish_time desc
+    </select>
+
+
+    <!--游客发布文章-->
+    <insert id="visitor_article_publish" parameterType="com.ywp.entity.Article">
+        <selectKey keyProperty="article_id" keyColumn="article_id" resultType="int" order="AFTER">
+              select last_insert_id()
+          </selectKey>
+        INSERT INTO article(people_id,people_name,topic,content,publish_time) VALUES(#{people_id},#{people_name},#{topic},#{content},now())
+    </insert>
+
+    <select id="findArticleByIDAndName" parameterType="com.ywp.entity.Article" resultMap="article">
+        select * from article WHERE people_id = #{people_id} and people_name = #{people_name}
+    </select>
+
+
+    <!--根据帖子ID删除帖子-->
+    <delete id="visitor_delete_article">
+        delete from article
+        <where>
+            article_id in
+            <foreach collection="array" item="article_id" open="(" close=")" separator=",">
+                #{article_id}
+            </foreach>
+        </where>
+
+    </delete>
+
+</mapper>

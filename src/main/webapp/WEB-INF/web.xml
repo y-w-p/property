@@ -1,0 +1,93 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+
+    <!-- 严格按照该顺序，否则<web-app>报红"(icon?,display-name?,description?,distributable?,context-param*,
+    filter*,filter-mapping*,listener*,servlet*,servlet-mapping*,
+    session-config?,mime-mapping*,welcome-file-list?,error-page*,
+    taglib*,resource-env-ref*,resource-ref*,security-constraint*,
+    login-config?,security-role*,env-entry*,ejb-ref*,ejb-local-ref*)"-->
+
+    <!-- 配置加载类路径的配置文件 使之加载resources下的文件-->
+         <context-param>
+             <param-name>contextConfigLocation</param-name>
+             <param-value>classpath:applicationContext.xml</param-value>
+         </context-param>
+
+
+    <!-- 解决中文乱码过滤器-->
+    <filter>      <!--注意这里是filter，不要配置成servlet-->
+        <filter-name>characterEncodingFilter</filter-name>    <!--过滤器名称-->
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+         <init-param>   <!--初始化参数-->
+             <param-name>encoding</param-name>  <!--参数名称-->
+             <param-value>utf-8</param-value>   <!--参数值-->
+         </init-param>
+         <init-param>   <!--初始化参数-->
+             <param-name>forceEncoding</param-name>  <!--参数名称-->
+             <param-value>true</param-value>   <!--参数值-->
+         </init-param>
+     </filter>
+     <filter-mapping> <!--过滤器映射-->
+          <filter-name>characterEncodingFilter</filter-name><!--过滤器名称-->
+          <url-pattern>/*</url-pattern><!--URL映射，给所有页面处理乱码-->
+     </filter-mapping>
+
+
+    <!-- 配置Spring的监听器  默认加载WEB-INF下的applicationContext.xml文件-->
+      <listener>
+          <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+      </listener>
+
+
+
+
+  <!-- 配置前端控制器：服务器启动必须加载，需要加载springmvc.xml配置文件 -->
+  <servlet>
+    <servlet-name>dispatcherServlet</servlet-name>  <!--名称任意，可改-->
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!-- 配置初始化参数，创建完DispatcherServlet对象，加载springmvc.xml配置文件 -->
+      <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:springmvc.xml</param-value>
+      </init-param>
+
+    <!-- 服务器启动的时候，让DispatcherServlet对象创建 -->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+      <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>     <!--名称同上，即可-->
+        <url-pattern>/</url-pattern>
+      </servlet-mapping>
+
+    <!--加载静态资源-->
+       <servlet-mapping>
+           <servlet-name>default</servlet-name>
+           <url-pattern>*.js</url-pattern>
+       </servlet-mapping>
+       <servlet-mapping>
+           <servlet-name>default</servlet-name>
+           <url-pattern>*.css</url-pattern>
+       </servlet-mapping>
+       <servlet-mapping>
+           <servlet-name>default</servlet-name>
+           <url-pattern>*.jpg</url-pattern>
+       </servlet-mapping>
+       <servlet-mapping>
+           <servlet-name>default</servlet-name>
+           <url-pattern>*.png</url-pattern>
+       </servlet-mapping>
+        <servlet-mapping>
+          <servlet-name>default</servlet-name>
+          <url-pattern>/layui/*</url-pattern>
+        </servlet-mapping>
+    
+    
+
+
+
+</web-app>
