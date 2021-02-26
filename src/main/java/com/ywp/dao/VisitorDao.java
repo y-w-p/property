@@ -1,6 +1,7 @@
 package com.ywp.dao;
 
 import com.ywp.entity.Article;
+import com.ywp.entity.Repaired;
 import com.ywp.entity.Visitor;
 import com.ywp.entity.Visitor_park;
 import org.apache.ibatis.annotations.Param;
@@ -98,4 +99,6 @@ public interface VisitorDao {
      * @param article_ids
      */
     void visitor_delete_article(int[] article_ids);
+
+
 }

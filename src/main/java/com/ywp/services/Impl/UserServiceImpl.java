@@ -172,5 +172,54 @@ public class UserServiceImpl implements UserService {
         userDao.delivery_property(property_id);
     }
 
+    /**
+     * 业主上报维修
+     * @param repaired
+     * @return
+     */
+    @Override
+    public boolean user_repaired(Repaired repaired) {
+        Integer integer = userDao.user_repaired(repaired);
+        if(integer != null){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 通过业主id查找业主维修上报记录
+     * @param user_id
+     * @return
+     */
+    @Override
+    public List<Repaired> getUserRepairedList(int user_id) {
+        List<Repaired> userRepairedList = userDao.findUserRepairedByID(user_id);
+        for(Repaired repaired:userRepairedList){
+            if(repaired.getStatus().equals("0")){
+                repaired.setStatus("未维修");
+            }
+            if(repaired.getStatus().equals("1")){
+               repaired.setStatus("已维修");
+            }
+            if(repaired.getStatus().equals("2")){
+               repaired.setStatus("未通过审核");
+            }
+            if(repaired.getStatus().equals("3")){
+               repaired.setStatus("已通过审核");
+            }
+        }
+
+        return userRepairedList;
+    }
+
+    /**
+     * 业主删除维修单
+     * @param repaired_ids
+     */
+    @Override
+    public void user_delete_repaired(int[] repaired_ids) {
+        userDao.user_delete_repaired(repaired_ids);
+    }
+
 
 }

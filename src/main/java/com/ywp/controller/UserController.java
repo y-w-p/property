@@ -11,16 +11,21 @@ import com.ywp.entity.*;
 import com.ywp.eums.UserRegisteredEnum;
 import com.ywp.services.UserService;
 import netscape.javascript.JSObject;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 业主控制层
@@ -178,9 +183,85 @@ public class UserController {
     }
 
 
+    /**
+     * 业主上报维修，切记不能使用 @ResponseBody，这个函数（有毒）
+     * @param repaired
+     * @param pictureFile
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/user_repaired")
+    public String user_repaired(Repaired repaired, @RequestParam("file") MultipartFile pictureFile, HttpServletRequest request,HttpSession session) throws IOException {
+        int user_id = (int) request.getSession().getAttribute("id");
+        //使用UUID给图片重命名，并去掉四个“-”
+        String name = UUID.randomUUID().toString().replaceAll("-", "");
+        //获取文件的扩展名
+        String ext = FilenameUtils.getExtension(pictureFile.getOriginalFilename());
+        //设置图片上传路径
+        String url = request.getSession().getServletContext().getRealPath("/upload");
+        System.out.println(url);
+        //以绝对路径保存重名命后的图片
+        pictureFile.transferTo(new File(url+"/"+name + "." + ext));
+
+
+        //把图片存储路径保存到数据库
+        repaired.setPicture_path("upload/"+name + "." + ext);
+        repaired.setUser_id(user_id);
+        repaired.setStatus("0");
+
+        boolean flag = userService.user_repaired(repaired);
+        if(flag){
+            session.setAttribute("repaired_msg","上报成功，具体详情请转至维修详情查看！");
+            return "user/user_repair";
+        }
+
+        session.setAttribute("repaired_msg","上报失败，请重新上报");
+        return "user/user_repair";
+    }
 
 
 
+    /**
+        * 业主上报维修记录详情
+        * @param page
+        * @param limit
+        * @param request
+        * @return
+        */
+       @ResponseBody
+       @RequestMapping("/user_repaired_list")
+       public TableData user_repaired_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit, HttpServletRequest request,HttpSession session){
+           int user_id = (int)request.getSession().getAttribute("id");
+           //上报成功后，不再提示上报成功信息
+           session.removeAttribute("repaired_msg");
+
+           PageHelper.startPage(page,limit);
+           List<Repaired> userRepairedList = userService.getUserRepairedList(user_id);
+           PageInfo<Repaired> pageInfo = new PageInfo<>(userRepairedList);
+           TableData tableData = new TableData();
+           tableData.setCode(0);
+           tableData.setMsg("成功");
+           tableData.setCount(pageInfo.getTotal());
+           tableData.setData(pageInfo.getList());
+           return tableData;
+       }
+
+
+    /**
+       * 删除帖子
+       * @param repaired_ids
+       * @return
+       */
+      @ResponseBody
+      @RequestMapping("/user_delete_repaired")
+      public ResultData user_delete_repaired(@RequestParam(value="repaired_id",required = false) int[] repaired_ids){
+          userService.user_delete_repaired(repaired_ids);
+          ResultData resultData = new ResultData();
+          resultData.setMessage("成功");
+          resultData.setStatus(true);
+          return resultData;
+      }
 
 
     /**
@@ -216,10 +297,32 @@ public class UserController {
 
     /**
      * 去业主物业账单详情页面
-      * @return
+     * @return
      */
     @RequestMapping("/toUserPropertyCost")
        public String toUserPropertyCost(){
         return "user/user_property_cost_list";
        }
+
+
+
+    /**
+     * 去业主上报维修详情页面
+     * @return
+     */
+    @RequestMapping("/toUserRepairedList")
+       public String toUserRepairedList(){
+        return "user/user_repair_list";
+       }
+
+
+    /**
+     * 去业主上报维修页面
+     * @return
+     */
+    @RequestMapping("/toUserRepaired")
+       public String toUserRepaired(){
+        return "user/user_repair";
+       }
+
 }

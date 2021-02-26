@@ -86,11 +86,11 @@
            </a>
            <dl class="layui-nav-child">
              <dd>
-               <a href="javascript:;" onclick="cost()">
-                 <i class="layui-icon">&#xe602;</i>上报维修</a></dd>
+               <a href="javascript:;" onclick="repaired_list()">
+                 <i class="layui-icon">&#xe602;</i>维修详情</a></dd>
                <dd>
-                 <a href="javascript:;" onclick="cost()">
-                   <i class="layui-icon">&#xe602;</i>维修详情</a></dd>
+                 <a href="javascript:;" onclick="repaired()">
+                   <i class="layui-icon">&#xe602;</i>上报维修</a></dd>
            </dl>
          </li>
         <li class="layui-nav-item">
@@ -150,6 +150,14 @@
 
 function property_cost() {
      $("#towhere").attr("src", '/user/toUserPropertyCost');
+   }
+
+function repaired_list() {
+     $("#towhere").attr("src", '/user/toUserRepairedList');
+   }
+
+function repaired() {
+     $("#towhere").attr("src", '/user/toUserRepaired');
    }
 
 

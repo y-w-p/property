@@ -53,6 +53,9 @@
 
     </bean>
 
+
+
+
     <!-- 配置扫描dao的包 -->
     <bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.ywp.dao"/>

@@ -1,9 +1,6 @@
 package com.ywp.dao;
 
-import com.ywp.entity.Property;
-import com.ywp.entity.User;
-import com.ywp.entity.User_park;
-import com.ywp.entity.Visitor_park;
+import com.ywp.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -90,4 +87,25 @@ public interface UserDao {
      * @param property_id
      */
     void delivery_property(int property_id);
+
+    /**
+     * 通过业主id查找业主维修上报记录
+     * @param user_id
+     * @return
+     */
+    List<Repaired> findUserRepairedByID(@Param("user_id")int user_id);
+
+
+    /**
+     * 业主上报维修
+     * @param repaired
+     * @return
+     */
+    public Integer user_repaired(Repaired repaired);
+
+    /**
+     * 业主删除维修单
+     * @param repaired_ids
+     */
+    void user_delete_repaired(int[] repaired_ids);
 }

@@ -1,6 +1,7 @@
 package com.ywp.services;
 
 import com.ywp.entity.Property;
+import com.ywp.entity.Repaired;
 import com.ywp.entity.User;
 import com.ywp.entity.User_park;
 
@@ -70,4 +71,23 @@ public interface UserService {
      * @param property_id
      */
     void delivery_property(int property_id);
+
+    /**
+     * 业主上报维修
+     * @param repaired
+     * @return
+     */
+    public boolean user_repaired(Repaired repaired);
+
+    /**
+     * 通过业主ID得到业主上报维修记录
+     * @param user_id
+     */
+    List<Repaired> getUserRepairedList(int user_id);
+
+    /**
+     * 业主删除维修单
+     * @param repaired_ids
+     */
+    void user_delete_repaired(int[] repaired_ids);
 }
