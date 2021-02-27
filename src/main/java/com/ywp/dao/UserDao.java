@@ -67,12 +67,20 @@ public interface UserDao {
      */
     List<User_park> findUserParkByID(@Param("user_id")int user_id);
 
+
     /**
      *  通过业主ID查找业主停车账单
      * @param user_id
      * @return
      */
     public List<User_park> findUserParkCostByID(@Param("user_id")int user_id);
+
+    /**
+     * 更新业主停车费用
+     * @param park_id
+     * @param i
+     */
+    void updateUserParkCost(@Param("park_id")int park_id, @Param("cost")int i);
 
     /**
      * 通过业主ID查找业主物业账单
@@ -87,6 +95,12 @@ public interface UserDao {
      * @param property_id
      */
     void delivery_property(int property_id);
+
+    /**
+     * 业主缴纳停车费
+     * @param park_id
+     */
+    void delivery_park(int park_id);
 
     /**
      * 通过业主id查找业主维修上报记录
@@ -108,4 +122,7 @@ public interface UserDao {
      * @param repaired_ids
      */
     void user_delete_repaired(int[] repaired_ids);
+
+
+
 }

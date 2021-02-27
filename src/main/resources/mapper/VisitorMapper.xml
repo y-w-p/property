@@ -23,13 +23,13 @@
        </resultMap>
 
     <resultMap id="visitorParkCostMap" type="com.ywp.entity.Visitor_park" >
-          <id column="cost_id" property="cost_id" jdbcType="INTEGER" />
+          <id column="park_id" property="park_id" jdbcType="INTEGER" />
           <result column="visitor_id" property="visitor_id" jdbcType="INTEGER" />
            <result column="visitor_name" property="visitor_name" jdbcType="INTEGER" />
            <result column="visitor_carnumber" property="visitor_carnumber" jdbcType="INTEGER" />
           <result column="park_start_time" property="park_start_time" jdbcType="TIMESTAMP" />
           <result column="park_end_time" property="park_end_time" jdbcType="TIMESTAMP" />
-           <result column="park_id" property="park_id" jdbcType="INTEGER" />
+           <result column="cost" property="cost" jdbcType="INTEGER" />
            <result column="period" property="period" jdbcType="BIGINT" />
            <result column="status" property="status" jdbcType="VARCHAR" />
           </resultMap>
@@ -70,8 +70,21 @@
 
     <!--通过游客ID查找游客停车账单-->
     <select id="findVisitorCostByID" parameterType="int" resultMap="visitorParkCostMap">
-        SELECT vc.cost_id, v.visitor_name, v.visitor_carnumber,vp.park_start_time,vp.park_end_time, TIMESTAMPDIFF(minute,park_start_time,park_end_time) AS period ,vc.status from visitor_park vp, visitor v , visitor_cost vc WHERE vp.visitor_id=#{visitor_id} and v.visitor_id=#{visitor_id} and vp.park_id = vc.park_id
+         SELECT vp.park_id, v.visitor_name, v.visitor_carnumber,vp.park_start_time,vp.park_end_time, TIMESTAMPDIFF(minute,park_start_time,park_end_time) AS period ,vp.status from visitor_park vp, visitor v  WHERE vp.visitor_id=#{visitor_id} and v.visitor_id=#{visitor_id}
     </select>
+
+    <!--更新游客停车费用-->
+       <update id="updateVisitorParkCost" parameterType="int">
+           update visitor_park set cost = #{cost} where park_id = #{park_id}
+       </update>
+
+    <!--游客缴纳停车费用-->
+      <update id="delivery_park" parameterType="int">
+          update visitor_park set status = 1 where park_id = #{park_id}
+      </update>
+
+
+
 
     <!--游客个人信息修改(包括用户名)-->
     <update id="visitor_info_update" parameterType="com.ywp.entity.Visitor">

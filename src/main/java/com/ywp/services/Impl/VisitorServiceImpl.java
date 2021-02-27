@@ -77,8 +77,56 @@ public class VisitorServiceImpl implements VisitorService {
      */
     @Override
     public List<Visitor_park> getVisitorParkCost(int visitor_id) {
-        List<Visitor_park> visitor_park_cost_list = visitorDao.findVisitorCostByID(visitor_id);
-               return visitor_park_cost_list;
+        List<Visitor_park> visitorParkCostList = visitorDao.findVisitorCostByID(visitor_id);
+        //计算时长和金额
+               for(Visitor_park visitor_park:visitorParkCostList){
+                   if(visitor_park != null){
+                     //计算分钟
+                     int minute = (int) visitor_park.getPeriod();
+                     visitor_park.setPeriod(minute);
+                     //计算金额
+                     int time1 = minute/60;
+                     int time2 = minute%60;
+                     //不足一小时
+                     if(time1 == 0){
+                         visitor_park.setCost(5);
+                         //未缴费
+                         if(visitor_park.getStatus().equals("0")){
+                          //将计算出来的金额插入数据库中
+                            visitorDao.updateVisitorParkCost(visitor_park.getPark_id(),5);
+                         }
+
+                     }else {
+                         if(time2 > 0){
+                             //超过1小时，不足2小时，算2小时
+                             time1 = time1+1;
+                         }
+                         //5元/h
+                         visitor_park.setCost(time1*5);
+                         //未缴费
+                         if(visitor_park.getStatus().equals("0")){
+                          //将计算出来的金额插入数据库中
+                           visitorDao.updateVisitorParkCost(visitor_park.getPark_id(),time1*5);
+                         }
+                     }
+                     if(visitor_park.getStatus().equals("1")){
+                         visitor_park.setStatus("已缴费");
+                     }else {
+                         visitor_park.setStatus("未缴费");
+                     }
+                   }
+               }
+               return visitorParkCostList;
+    }
+
+
+    /**
+     * 游客缴纳停车费
+     * @param park_id
+     */
+    @Override
+    public void delivery_park(int park_id) {
+        visitorDao.delivery_park(park_id);
     }
 
     /**

@@ -120,6 +120,12 @@ public class UserServiceImpl implements UserService {
                //不足一小时
                if(time1 == 0){
                    user_park.setCost(5);
+                   //未缴费
+                   if(user_park.getStatus().equals("0")){
+                       //将计算出来的金额插入数据库中
+                       userDao.updateUserParkCost(user_park.getPark_id(),5);
+                   }
+
                }else {
                    if(time2>0){
                        //超过半天，不足一天，算一天
@@ -127,6 +133,11 @@ public class UserServiceImpl implements UserService {
                    }
                    //2元/12h
                    user_park.setCost(time1*5);
+                   //未缴费
+                   if(user_park.getStatus().equals("0")){
+                       //将计算出来的金额插入数据库中
+                       userDao.updateUserParkCost(user_park.getPark_id(),5);
+                   }
                }
              if(user_park.getStatus().equals("1")){
                  user_park.setStatus("已缴费");
@@ -171,6 +182,15 @@ public class UserServiceImpl implements UserService {
     public void delivery_property(int property_id) {
         userDao.delivery_property(property_id);
     }
+
+    /**
+     * 业主缴纳停车费
+     * @param park_id
+     */
+    @Override
+       public void delivery_park(int park_id) {
+           userDao.delivery_park(park_id);
+       }
 
     /**
      * 业主上报维修
@@ -220,6 +240,8 @@ public class UserServiceImpl implements UserService {
     public void user_delete_repaired(int[] repaired_ids) {
         userDao.user_delete_repaired(repaired_ids);
     }
+
+
 
 
 }

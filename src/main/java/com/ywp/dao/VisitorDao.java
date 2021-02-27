@@ -15,6 +15,8 @@ import java.util.List;
 @Repository
 public interface VisitorDao {
 
+
+
     /**
      * 游客登录
      * @param visitor_name
@@ -55,6 +57,23 @@ public interface VisitorDao {
      * @return
      */
     public List<Visitor_park> findVisitorCostByID(@Param("visitor_id")int visitor_id);
+
+
+    /**
+     * 游客缴纳停车费
+     * @param park_id
+     */
+    void delivery_park(int park_id);
+
+
+    /**
+    * 更新游客停车费用
+    * @param park_id
+    * @param i
+    */
+   void updateVisitorParkCost(@Param("park_id")int park_id, @Param("cost")int i);
+
+
 
     /**
      * 游客个人信息更新（包括用户名）

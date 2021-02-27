@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Visitor_park implements Serializable {
-    private int cost_id;
     private int park_id;
     private int visitor_id;
     private long cost;
@@ -21,14 +20,6 @@ public class Visitor_park implements Serializable {
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date park_end_time;
-
-    public int getCost_id() {
-        return cost_id;
-    }
-
-    public void setCost_id(int cost_id) {
-        this.cost_id = cost_id;
-    }
 
     public int getPark_id() {
         return park_id;
@@ -113,8 +104,7 @@ public class Visitor_park implements Serializable {
     @Override
     public String toString() {
         return "Visitor_park{" +
-                "cost_id=" + cost_id +
-                ", park_id=" + park_id +
+                "park_id=" + park_id +
                 ", visitor_id=" + visitor_id +
                 ", cost=" + cost +
                 ", period=" + period +

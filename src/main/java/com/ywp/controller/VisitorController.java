@@ -4,6 +4,7 @@ package com.ywp.controller;
 import com.fasterxml.jackson.databind.ser.std.StdArraySerializers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ywp.dao.VisitorDao;
 import com.ywp.data.ResultData;
 import com.ywp.data.TableData;
 import com.ywp.entity.Article;
@@ -121,33 +122,6 @@ public class VisitorController {
         int visitor_id = (int)request.getSession().getAttribute("id");
         PageHelper.startPage(page,limit);
         List<Visitor_park> visitorParkCostList = visitorService.getVisitorParkCost(visitor_id);
-        //计算时长和金额
-        for(Visitor_park visitor_park:visitorParkCostList){
-            if(visitor_park != null){
-              //计算分钟
-              int minute = (int) visitor_park.getPeriod();
-              visitor_park.setPeriod(minute);
-              //计算金额
-              int time1 = minute/60;
-              int time2 = minute%60;
-              //不足一小时
-              if(time1 == 0){
-                  visitor_park.setCost(5);
-              }else {
-                  if(time2 > 0){
-                      //超过1小时，不足2小时，算2小时
-                      time1 = time1+1;
-                  }
-                  //5元/h
-                  visitor_park.setCost(time1*5);
-              }
-              if(visitor_park.getStatus().equals("1")){
-                  visitor_park.setStatus("已缴费");
-              }else {
-                  visitor_park.setStatus("未缴费");
-              }
-            }
-        }
         PageInfo<Visitor_park> pageInfo = new PageInfo<>(visitorParkCostList);
         TableData tableData = new TableData();
         tableData.setCode(0);
@@ -157,6 +131,24 @@ public class VisitorController {
         return tableData;
 
     }
+
+
+
+
+    /**
+     * 游客缴纳停车费
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/delivery_park")
+    public ResultData delivery_park(@RequestParam("park_id") int park_id){
+        visitorService.delivery_park(park_id);
+        ResultData resultData = new ResultData();
+        resultData.setMessage("成功");
+        resultData.setStatus(true);
+        return resultData;
+    }
+
 
     /**
      * 游客浏览帖子

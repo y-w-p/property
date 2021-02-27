@@ -54,7 +54,7 @@ layui.use(['table','jquery','layer'], function(){
       ,{field: 'money', title: '物业费',sort: true}
       ,{field: 'publish_time', title: '发布时间',sort: true}
       ,{field: 'status', title: '缴费状态',sort: true}
-      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+      ,{fixed: 'right', title:'操作', toolbar: '#barDemo'}
         ]
       ]
   });

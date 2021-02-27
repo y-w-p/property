@@ -21,23 +21,13 @@
           <result column="user_id" property="user_id" jdbcType="INTEGER" />
            <result column="user_name" property="user_name" jdbcType="INTEGER" />
            <result column="user_carnumber" property="user_carnumber" jdbcType="INTEGER" />
+           <result column="period" property="period" jdbcType="INTEGER" />
+        <result column="cost" property="cost" jdbcType="INTEGER" />
           <result column="park_location" property="park_location" jdbcType="VARCHAR" />
           <result column="park_start_time" property="park_start_time" jdbcType="TIMESTAMP" />
           <result column="park_end_time" property="park_end_time" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
     </resultMap>
-
-    <resultMap id="userParkCostMap" type="com.ywp.entity.User_park" >
-          <id column="cost_id" property="cost_id" jdbcType="INTEGER" />
-          <result column="user_id" property="user_id" jdbcType="INTEGER" />
-           <result column="user_name" property="user_name" jdbcType="INTEGER" />
-           <result column="user_carnumber" property="user_carnumber" jdbcType="INTEGER" />
-          <result column="park_start_time" property="park_start_time" jdbcType="TIMESTAMP" />
-          <result column="park_end_time" property="park_end_time" jdbcType="TIMESTAMP" />
-           <result column="park_id" property="park_id" jdbcType="INTEGER" />
-           <result column="period" property="period" jdbcType="BIGINT" />
-           <result column="status" property="status" jdbcType="VARCHAR" />
-      </resultMap>
-
 
 
 
@@ -77,10 +67,13 @@
         select park_id,user_name,user_carnumber,park_location,park_start_time,park_end_time from user_park up,user u where up.user_id = #{user_id} and u.user_id = #{user_id}
     </select>
 
+
     <!--通过业主id，查找业主停车账单-->
-    <select id="findUserParkCostByID" parameterType="int" resultMap="userParkCostMap">
-         SELECT upc.cost_id, u.user_name, u.user_carnumber,up.park_start_time,up.park_end_time, TIMESTAMPDIFF(MINUTE,park_start_time,park_end_time) AS period ,upc.status from user_park up,user u, user_park_cost upc WHERE up.user_id=#{user_id} and u.user_id=#{user_id} and up.park_id = upc.park_id
+    <select id="findUserParkCostByID" parameterType="int" resultMap="userParkMap">
+          SELECT up.park_id, u.user_name, u.user_carnumber,up.park_start_time,up.park_end_time, TIMESTAMPDIFF(MINUTE,park_start_time,park_end_time) AS period ,up.status from user_park up, user u WHERE up.user_id=#{user_id} and u.user_id=#{user_id}
     </select>
+
+
 
     <!--通过业主id，查找业主物业账单-->
     <select id="findUserPropertyCostByID" parameterType="int" resultType="com.ywp.entity.Property">
@@ -92,6 +85,16 @@
     <update id="delivery_property" parameterType="int">
         update property set status = 1 where property_id = #{property_id}
     </update>
+
+    <!--更新业主停车费用-->
+   <update id="updateUserParkCost" parameterType="int">
+       update user_park set cost = #{cost} where park_id = #{park_id}
+   </update>
+
+    <!--业主缴纳停车费用-->
+   <update id="delivery_park" parameterType="int">
+       update user_park set status = 1 where park_id = #{park_id}
+   </update>
 
     <!--通过业主id查找业主维修记录-->
     <select id="findUserRepairedByID" parameterType="int" resultType="com.ywp.entity.Repaired">

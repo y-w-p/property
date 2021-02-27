@@ -169,13 +169,29 @@ public class UserController {
     }
 
     /**
-     * 业主交物业费用
+     * 业主缴纳物业费
      * @return
      */
     @ResponseBody
     @RequestMapping("/delivery_property")
     public ResultData delivery_property(@RequestParam("property_id") int property_id){
         userService.delivery_property(property_id);
+        ResultData resultData = new ResultData();
+        resultData.setMessage("成功");
+        resultData.setStatus(true);
+        return resultData;
+    }
+
+
+
+    /**
+     * 业主缴纳停车费
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/delivery_park")
+    public ResultData delivery_park(@RequestParam("park_id") int park_id){
+        userService.delivery_park(park_id);
         ResultData resultData = new ResultData();
         resultData.setMessage("成功");
         resultData.setStatus(true);

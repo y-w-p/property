@@ -72,6 +72,13 @@ public interface UserService {
      */
     void delivery_property(int property_id);
 
+
+    /**
+        * 业主缴纳停车费
+        * @param park_id
+        */
+    void delivery_park(int park_id);
+
     /**
      * 业主上报维修
      * @param repaired
@@ -90,4 +97,7 @@ public interface UserService {
      * @param repaired_ids
      */
     void user_delete_repaired(int[] repaired_ids);
+
+
+
 }

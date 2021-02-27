@@ -50,6 +50,18 @@ public interface VisitorService {
      */
     public List<Visitor_park> getVisitorParkCost(int visitor_id);
 
+
+
+
+    /**
+     * 游客缴纳停车费
+     * @param park_id
+     */
+    void delivery_park(int park_id);
+
+
+
+
     /**
      * 游客信息更新
      * @param visitor
@@ -87,4 +99,5 @@ public interface VisitorService {
      * @param article_ids
      */
     void visitor_delete_article(int[] article_ids);
+
 }

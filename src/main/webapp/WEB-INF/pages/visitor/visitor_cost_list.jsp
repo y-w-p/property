@@ -1,4 +1,11 @@
-<%@ page language="java"  pageEncoding="UTF-8" contentType="text/html;charset=utf-8"%>
+<%@ page language="java"  pageEncoding="UTF-8" contentType="text/html;charset=utf-8" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page import="com.ywp.data.ResultData" %>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,22 +17,29 @@
 </head>
 <body>
 
-<table class="layui-hide" id="cost" lay-filter="cost" ></table>
+<table class="layui-hide" id="test" lay-filter="test" ></table>
+
+<%--头部工具栏--%>
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="park_cost">缴费</a>
+</script>
 
 <script src="../../../layui/layui.js"  charset="utf-8"></script>
 <script>
-layui.use('table', function(){
-  var table = layui.table;
+layui.use(['table','jquery','layer'], function(){
+    var table = layui.table;
+    var layer = layui.layer;
+    var $ = layui.jquery;
 
   //第一个实例
   table.render({
-    elem: '#cost'
+    elem: '#test'
     ,url:'/visitor/visitor_park_cost_list' //数据接口
     ,method:'post'
     ,page: true
     ,cols: [
         [ //表头
-       {field: 'cost_id', title: '停车账单号', sort: true}
+       {field: 'park_id', title: '停车账单号', sort: true}
       ,{field: 'visitor_name', title: '游客名称'}
       ,{field: 'visitor_carnumber', title: '游客车牌号'}
       ,{field: 'park_start_time', title: '开始停车时间',sort: true}
@@ -33,9 +47,49 @@ layui.use('table', function(){
       ,{field: 'period', title: '时长（分钟）',sort: true}
       ,{field: 'cost', title: '金额（单位：元，5元/h）：',sort: true}
       ,{field: 'status', title: '缴费状态',sort: true}
+      ,{fixed: 'right', title:'操作', toolbar: '#barDemo'}
         ]
       ]
   });
+
+
+
+
+    //监听行工具事件
+     table.on('tool(test)', function(obj){
+         var checkStatus =obj.data;
+         var park_id = checkStatus.park_id;
+         if(obj.event === 'park_cost'){
+             layer.confirm('确定要缴费吗？',{btn:["确定","取消"]},
+             //确定事件
+             function () {
+                 $.ajax({
+                   url:"/visitor/delivery_park",
+                   data:"park_id="+park_id,
+                   method:'post',
+                   traditional:true,
+                   success:function (result) {
+                       if(result.status){
+                         table.reload('test',{});//重新加载数据
+                       }else {
+                           alert(result.message);
+                       }
+                       layer.closeAll('dialog');//有效
+                   }
+                 })
+             }
+             //取消事件
+             ,function () {
+                 layer.close();
+             }
+             )
+         }
+
+     });
+
+
+
+
 
 });
 </script>
