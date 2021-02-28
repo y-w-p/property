@@ -134,28 +134,37 @@
     var element = layui.element;
     var $ = layui.jquery;
   });
+  //个人信息页面
   function Info() {
     $("#towhere").attr("src", '/user/toUserInfo');
   }
+
+  //欢迎页面
   function welcome() {
     $("#towhere").attr("src", '/main/toWelcome');
   }
 
+  //停车页面
   function parking() {
     $("#towhere").attr("src", '/user/toUserParking');
   }
+
+  //停车账单页面
   function park_cost() {
       $("#towhere").attr("src", '/user/toUserParkCost');
     }
 
+    //物业账单页面
 function property_cost() {
      $("#towhere").attr("src", '/user/toUserPropertyCost');
    }
 
+   //报修详情页面
 function repaired_list() {
      $("#towhere").attr("src", '/user/toUserRepairedList');
    }
 
+   //上报维修
 function repaired() {
      $("#towhere").attr("src", '/user/toUserRepaired');
    }

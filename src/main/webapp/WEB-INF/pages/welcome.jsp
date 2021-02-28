@@ -48,7 +48,7 @@
     <div class="layui-layout-right"> <span id="clock" style="font-size: medium"></span></div>
 
     <div class="layui-show" style="margin-top: 20%;margin-left: 10%">
-        <h1 style="font-size:60px;color: #01AAED;font-style: italic">欢迎游客"<%=request.getSession().getAttribute("name")%>"使用本系统</h1>
+        <h1 style="font-size:60px;color: #01AAED;font-style: italic">欢迎"<%=request.getSession().getAttribute("name")%>"使用本系统</h1>
     </div>
 
     <script type="text/javascript">

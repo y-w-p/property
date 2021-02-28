@@ -93,15 +93,15 @@
     </form>
 
 
-<%--<%--%>
-    <%--String msg = (String) request.getSession().getAttribute("update_info_msg");--%>
-    <%--if(msg != null){--%>
-<%--%>--%>
-<%--<script type="text/javascript">--%>
-    <%--window.alert("<%=msg%>");--%>
-<%--</script>--%>
+<%
+    String msg = (String) request.getSession().getAttribute("update_info_msg");
+    if(msg != null){
+%>
+<script type="text/javascript">
+    window.alert("<%=msg%>");
+</script>
 
-<%--<% }%>--%>
+<% }%>
 <script src="../../../layui/layui.js" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>

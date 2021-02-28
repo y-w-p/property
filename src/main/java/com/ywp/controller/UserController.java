@@ -265,7 +265,7 @@ public class UserController {
 
 
     /**
-       * 删除帖子
+       * 删除上报维修
        * @param repaired_ids
        * @return
        */
@@ -281,7 +281,7 @@ public class UserController {
 
 
     /**
-     * 去个人信息页面
+     * 去业主个人信息页面
      * @return
      */
     @RequestMapping("/toUserInfo")

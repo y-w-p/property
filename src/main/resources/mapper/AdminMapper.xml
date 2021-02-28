@@ -11,9 +11,97 @@
         <result column="admin_password" property="admin_password" jdbcType="VARCHAR" />
     </resultMap>
 
-
+    <!--管理员登录-->
     <select id="adminLogin" parameterType="String" resultMap="adminMap">
         select * from admin where admin_name=#{admin_name} and admin_name=#{admin_name}
+    </select>
+
+
+    <!--通过admin名称查找admin-->
+    <select id="findAdminByName" parameterType="String" resultType="com.ywp.entity.Admin">
+         select * from admin where admin_name = #{admin_name}
+    </select>
+
+
+    <!--管理员个人信息修改(包括用户名)-->
+    <update id="admin_info_update" parameterType="com.ywp.entity.Admin">
+        update admin set admin_name = #{admin_name},admin_password=#{admin_password} where admin_id=#{admin_id}
+    </update>
+
+
+    <!--管理员个人信息修改(不包括用户名)-->
+    <update id="admin_info_save" parameterType="com.ywp.entity.Admin">
+        update admin set admin_password=#{admin_password} where admin_id=#{admin_id}
+    </update>
+
+
+    <!--查找所有已发帖子-->
+    <select id="findArticleAll" resultType="com.ywp.entity.Article">
+        select * from article
+    </select>
+
+
+    <!--根据帖子ID删除帖子-->
+    <delete id="admin_delete_article">
+        delete from article
+        <where>
+            article_id in
+            <foreach collection="array" item="article_id" open="(" close=")" separator=",">
+                #{article_id}
+            </foreach>
+        </where>
+
+    </delete>
+
+
+    <!--查找所有上报维修-->
+       <select id="findRepairedAll" resultType="com.ywp.entity.Repaired">
+           select repaired_id,user_name,topic,content,location,picture_path,publish_time,status from repaired r,user u WHERE r.user_id=u.user_id
+       </select>
+
+    <!--根据维修ID删除上报维修-->
+    <delete id="admin_delete_repaired">
+        delete from repaired
+        <where>
+            repaired_id in
+            <foreach collection="array" item="repaired_id" open="(" close=")" separator=",">
+                #{repaired_id}
+            </foreach>
+        </where>
+
+    </delete>
+
+    <!--根据ID不通过报修审核,状态status=1 不通过报修审核-->
+    <update id="admin_repaired_check_no" parameterType="int">
+        update repaired set status = 1 where repaired_id = #{repaired_id}
+    </update>
+
+    <!--根据ID通过报修审核，状态status=2 通过报修审核-->
+   <update id="admin_repaired_checked" parameterType="int">
+       update repaired set status = 2 where repaired_id = #{repaired_id}
+   </update>
+
+
+    <!--根据ID报修已维修，状态status=3 报修已维修-->
+   <update id="admin_repaired_repaired" parameterType="int">
+       update repaired set status = 3 where repaired_id = #{repaired_id}
+   </update>
+
+    <!--查询所有已注册用户-->
+    <select id="findUserAll" resultType="com.ywp.entity.User">
+        select * from user
+    </select>
+
+
+    <!--管理员发布物业费用-->
+    <insert id="admin_property_publish" parameterType="com.ywp.entity.Property">
+        insert into property(admin_name,user_id,year,month,money,publish_time,status) values (#{admin_name},#{user_id},#{year},#{month},#{money},now(),#{status})
+    </insert>
+
+    <!--所有物业账单详情-->
+    <select id="getAllPropertyCost" parameterType="String" resultType="com.ywp.entity.Property">
+        select property_id,admin_name,user_name,year,month,money,publish_time,status from property p,user u where u.user_id = p.user_id
+
     </select>
 
 </mapper>

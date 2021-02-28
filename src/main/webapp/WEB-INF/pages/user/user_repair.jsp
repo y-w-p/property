@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="../../../layui/css/layui.css"  media="all">
 </head>
 <body class="layui-bg-gray">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+  <legend>上报维修</legend>
+</fieldset>
     <form class="layui-form layui-form-pane" action="/user/user_repaired" enctype="multipart/form-data" method="post">
 
     <div class="layui-form-item">
@@ -28,7 +31,7 @@
         </div>
 
 
-        <label class="layui-form-label">选择楼栋：</label>
+        <label class="layui-form-label">选择位置：</label>
             <div class="layui-input-inline">
               <select name="location" id="location" lay-verify="required" lay-search="">
                 <option value="">直接选择或搜索选择</option>

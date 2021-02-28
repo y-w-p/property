@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="../../../layui/css/layui.css"  media="all">
 </head>
 <body class="layui-bg-gray">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+  <legend>发布帖子</legend>
+</fieldset>
     <form class="layui-form layui-form-pane" action="/visitor/visitor_article_publish" style="text-align: center">
 
     <div class="layui-form-item">

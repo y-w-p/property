@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean user_info_update(User user) {
-        //查看游客名称是否已占用
+        //查看业主名称是否已占用
            List<User> userByName = userDao.findUserByName(user.getUser_name());
             for(User user1:userByName){
               if(user1 != null){
@@ -158,12 +158,6 @@ public class UserServiceImpl implements UserService {
     public List<Property> getUserPropertyCost(int user_id) {
         List<Property> userPropertyCostList = userDao.findUserPropertyCostByID(user_id);
         for (Property property:userPropertyCostList){
-           //1平方2元
-           BigDecimal user_area = property.getUser_area();
-           BigDecimal num = new BigDecimal(Double.toString(2)); //1平方价格
-           BigDecimal money = num.multiply(user_area);
-           property.setMoney(money.stripTrailingZeros().toPlainString());//stripTrailingZeros去除末尾的".0"，toPlainString表示不使用科学计数法（toString会使用科学计数法）
-
            //缴费状态
            if(property.getStatus().equals("1")){
                property.setStatus("已缴费");
@@ -216,16 +210,16 @@ public class UserServiceImpl implements UserService {
         List<Repaired> userRepairedList = userDao.findUserRepairedByID(user_id);
         for(Repaired repaired:userRepairedList){
             if(repaired.getStatus().equals("0")){
-                repaired.setStatus("未维修");
+                repaired.setStatus("未审核");
             }
             if(repaired.getStatus().equals("1")){
-               repaired.setStatus("已维修");
-            }
+              repaired.setStatus("未通过审核");
+           }
             if(repaired.getStatus().equals("2")){
-               repaired.setStatus("未通过审核");
+               repaired.setStatus("通过审核，等待维修");
             }
             if(repaired.getStatus().equals("3")){
-               repaired.setStatus("已通过审核");
+               repaired.setStatus("已维修");
             }
         }
 

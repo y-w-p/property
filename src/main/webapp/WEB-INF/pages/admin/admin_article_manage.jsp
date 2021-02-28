@@ -22,7 +22,7 @@
 <%--头部工具栏--%>
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">
-    <button class="layui-btn layui-btn-sm" lay-event="delete">删除选中维修单</button>
+    <button class="layui-btn layui-btn-sm" lay-event="delete">删除选中帖子</button>
   </div>
 </script>
 
@@ -35,33 +35,21 @@ layui.use(['table','jquery','layer'], function(){
   //第一个实例
   table.render({
     elem: '#test'
-    ,url:'/user/user_repaired_list' //数据接口
+    ,url:'/admin/admin_article_list' //数据接口
     ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
     ,method:'post'
     ,page: true
     ,cols: [
         [ //表头
       {type: 'checkbox', fixed: 'left'} //选择框
-      ,{field: 'repaired_id', title: '维修单号',width:110, sort: true}
-      ,{field: 'user_name', title: '发布者名称'}
-      ,{field: 'topic', title: '概述'}
-      ,{field: 'content', title: '具体描述'}
-      ,{field: 'location', title: '位置',width:80,sort:true}
-      ,{field: 'publish_time', title: '发布时间',width:170,sort: true}
-      ,{field: 'picture_path', title: '详情图片',
-            templet:function (d) {
-                                                    //tomcat已配置虚拟路径，（/ssm）
-                return '<div οnclick="photograph(this)"><img src='+/ssm/+d.picture_path+'></div>'
-            }
-       }
-      ,{field: 'status', title: '审核状态',width:180,sort: true}
+      ,{field: 'article_id', title: '帖子ID', sort: true}
+      ,{field: 'people_name', title: '发布者名称'}
+      ,{field: 'topic', title: '主题'}
+      ,{field: 'content', title: '内容'}
+      ,{field: 'publish_time', title: '发布时间',sort: true}
         ]
       ]
   });
-
-
-
-
     //头工具栏事件
       table.on('toolbar(test)', function(obj){
         var checkStatus = table.checkStatus("test");
@@ -72,13 +60,13 @@ layui.use(['table','jquery','layer'], function(){
                 layer.confirm('想清楚了，确定删除吗？',{btn:["确定","取消"]},
                     function () {
                        //删除数据
-                       var repaired_id = [];
+                       var article_id = [];
                         for(var i in data){
-                            repaired_id[i] = data[i].repaired_id;
+                            article_id[i] = data[i].article_id;
                         }
                        $.ajax({
-                           url:"/user/user_delete_repaired",
-                           data:{repaired_id:repaired_id},
+                           url:"/admin/admin_delete_article",
+                           data:{article_id:article_id},
                            method:'post',
                            traditional:true,
                            success:function (result) {
@@ -99,35 +87,7 @@ layui.use(['table','jquery','layer'], function(){
             break;
         };
       });
-
-
-
-
-
-
-
-
 });
-
-
-function photograph(t) {
-
-    var t = $(t).find("img");
-    if (t == null || t == '') {
-        return;
-    }
-    layer.open({
-        type: 1,
-        skin: 'layui-layer-rim', //加上边框
-        area: ['75%', '85%'], //宽高
-        shadeClose: true, //开启遮罩关闭
-        end: function (index, layero) {
-            return false;
-        },
-        content: '<div style="text-align:center"><img src="' + $(t).attr('src') + '" /></div>'
-    })
-}
-
 </script>
 </body>
 </html>

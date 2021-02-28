@@ -52,12 +52,12 @@
     </select>
 
 
-    <!--游客个人信息修改(包括用户名)-->
+    <!--业主个人信息修改(包括用户名)-->
     <update id="user_info_update" parameterType="com.ywp.entity.User">
         update user set user_name = #{user_name},user_password=#{user_password},user_idcard=#{user_idcard},user_phonenumber=#{user_phonenumber},user_address=#{user_address},user_area=#{user_area},user_carnumber=#{user_carnumber} where user_id=#{user_id}
     </update>
 
-    <!--游客个人信息修改(不包括用户名)-->
+    <!--业主个人信息修改(不包括用户名)-->
     <update id="user_info_save" parameterType="com.ywp.entity.User">
         update user set user_password=#{user_password},user_idcard=#{user_idcard},user_phonenumber=#{user_phonenumber},user_address=#{user_address},user_area=#{user_area},user_carnumber=#{user_carnumber} where user_id=#{user_id}
     </update>
@@ -77,7 +77,7 @@
 
     <!--通过业主id，查找业主物业账单-->
     <select id="findUserPropertyCostByID" parameterType="int" resultType="com.ywp.entity.Property">
-      SELECT property_id,admin_name,user_name,user_area,year,month,publish_time,status from property p, user u
+      SELECT property_id,admin_name,user_name,user_area,year,month,money,publish_time,status from property p, user u
       where p.user_id = #{user_id} and u.user_id=#{user_id}
     </select>
 
