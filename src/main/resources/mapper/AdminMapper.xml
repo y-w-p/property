@@ -35,6 +35,7 @@
     </update>
 
 
+    <!--小区贴吧-->
     <!--查找所有已发帖子-->
     <select id="findArticleAll" resultType="com.ywp.entity.Article">
         select * from article
@@ -52,8 +53,13 @@
         </where>
 
     </delete>
+    <!--小区贴吧-->
 
 
+
+
+
+    <!--维修管理-->
     <!--查找所有上报维修-->
        <select id="findRepairedAll" resultType="com.ywp.entity.Repaired">
            select repaired_id,user_name,topic,content,location,picture_path,publish_time,status from repaired r,user u WHERE r.user_id=u.user_id
@@ -86,12 +92,18 @@
    <update id="admin_repaired_repaired" parameterType="int">
        update repaired set status = 3 where repaired_id = #{repaired_id}
    </update>
+    <!--维修管理-->
 
+
+
+
+
+
+    <!--物业管理-->
     <!--查询所有已注册用户-->
     <select id="findUserAll" resultType="com.ywp.entity.User">
         select * from user
     </select>
-
 
     <!--管理员发布物业费用-->
     <insert id="admin_property_publish" parameterType="com.ywp.entity.Property">
@@ -101,7 +113,153 @@
     <!--所有物业账单详情-->
     <select id="getAllPropertyCost" parameterType="String" resultType="com.ywp.entity.Property">
         select property_id,admin_name,user_name,year,month,money,publish_time,status from property p,user u where u.user_id = p.user_id
-
+        <if test="user_name!=null and user_name != ''">
+            and user_name like "%"#{user_name}"%"
+        </if>
+        <if test="year!=null and year != ''">
+            and year like "%"#{year}"%"
+        </if>
+        <if test="month!=null and month != ''">
+           and month like "%"#{month}"%"
+        </if>
     </select>
+    <!--物业管理-->
+
+
+
+
+
+
+    <!--用户管理-->
+    <!--管理员查看所有用户-->
+    <select id="getAllUserByName" parameterType="String" resultType="com.ywp.entity.User">
+          select * from user where 1=1
+        <if test="user_name!=null and user_name != ''">
+             and user_name like "%"#{user_name}"%"
+        </if>
+        <if test="user_idcard!=null and user_idcard != ''">
+              and user_idcard like "%"#{user_idcard}"%"
+        </if>
+        <if test="user_carnumber!=null and user_carnumber != ''">
+              and user_carnumber like "%"#{user_carnumber}"%"
+        </if>
+    </select>
+
+
+    <!--管理员根据ID删除业主-->
+    <delete id="admin_delete_user" parameterType="int">
+        delete from user where user_id = #{user_id}
+    </delete>
+
+
+    <!--管理员查看所有游客-->
+    <select id="getAllVisitor" parameterType="String" resultType="com.ywp.entity.Visitor">
+         select * from visitor where 1=1
+       <if test="visitor_name!=null and visitor_name != ''">
+            and visitor_name like "%"#{visitor_name}"%"
+       </if>
+       <if test="visitor_phonenumber!=null and visitor_phonenumber != ''">
+             and visitor_phonenumber like "%"#{visitor_phonenumber}"%"
+       </if>
+       <if test="visitor_carnumber!=null and visitor_carnumber != ''">
+             and visitor_carnumber like "%"#{visitor_carnumber}"%"
+       </if>
+   </select>
+
+
+    <!--管理员根据ID删除游客-->
+    <delete id="admin_delete_visitor" parameterType="int">
+         delete from visitor where visitor_id = #{visitor_id}
+    </delete>
+    <!--用户管理-->
+
+
+
+
+
+    <!--停车管理-->
+    <!--业主停车登记-->
+    <insert id="admin_user_park" parameterType="com.ywp.entity.User_park">
+        <selectKey keyProperty="park_id" keyColumn="park_id" resultType="int" order="AFTER">
+           select last_insert_id()
+        </selectKey>
+        insert into user_park(user_id,park_location,user_carnumber,park_start_time,status) values (#{user_id},#{park_location},#{user_carnumber},now(),#{status})
+    </insert>
+
+
+
+    <!--游客停车登记-->
+    <insert id="admin_visitor_park" parameterType="com.ywp.entity.Visitor_park">
+       <selectKey keyProperty="park_id" keyColumn="park_id" resultType="int" order="AFTER">
+          select last_insert_id()
+       </selectKey>
+       insert into visitor_park(visitor_id,park_location,visitor_carnumber,park_start_time,status) values (#{visitor_id},#{park_location},#{visitor_carnumber},now(),#{status})
+    </insert>
+
+
+    <!--正在停车的业主停车记录-->
+    <select id="getUserParking" parameterType="String" resultType="com.ywp.entity.User_park">
+        select * from user_park where status = '0' and cost is null
+       <if test="park_location!=null and park_location != ''">
+             and park_location like "%"#{park_location}"%"
+       </if>
+       <if test="user_carnumber!=null and user_carnumber != ''">
+             and user_carnumber like "%"#{user_carnumber}"%"
+       </if>
+    </select>
+
+
+    <!--业主结束停车-->
+    <update id="admin_user_stop_park" parameterType="int">
+        update user_park set park_end_time = now() where park_id = #{park_id}
+    </update>
+
+
+    <!--通过停车单ID查找业主停车-->
+    <select id="findUserParkByID" parameterType="int" resultType="com.ywp.entity.User_park">
+        select * from user_park where park_id = #{park_id}
+    </select>
+
+
+    <!--业主缴纳停车费用-->
+    <update id="admin_user_pay_park" parameterType="com.ywp.entity.User_park">
+        update user_park set cost = #{cost},status = #{status} where park_id = #{park_id}
+    </update>
+
+
+    <!--正在停车的游客停车记录-->
+    <select id="getVisitorParking" parameterType="String" resultType="com.ywp.entity.Visitor_park">
+       select * from visitor_park where status = '0' and cost is null
+      <if test="park_location!=null and park_location != ''">
+            and park_location like "%"#{park_location}"%"
+      </if>
+      <if test="visitor_carnumber!=null and visitor_carnumber != ''">
+            and visitor_carnumber like "%"#{visitor_carnumber}"%"
+      </if>
+   </select>
+
+
+    <!--游客结束停车-->
+    <update id="admin_visitor_stop_park" parameterType="int">
+           update visitor_park set park_end_time = now() where park_id = #{park_id}
+    </update>
+
+
+
+    <!--通过停车单ID查找游客停车-->
+    <select id="findVisitorParkByID" parameterType="int" resultType="com.ywp.entity.Visitor_park">
+       select * from visitor_park where park_id = #{park_id}
+    </select>
+
+
+   <!--游客缴纳停车费用-->
+   <update id="admin_visitor_pay_park" parameterType="com.ywp.entity.Visitor_park">
+       update visitor_park set cost = #{cost},status = #{status} where park_id = #{park_id}
+   </update>
+
+    <!--停车管理-->
+
+
+
 
 </mapper>

@@ -62,20 +62,39 @@
             <cite>停车管理</cite>
           </a>
           <dl class="layui-nav-child">
-            <dd>
-              <a href="javascript:;" onclick="parking()">
-                <i class="layui-icon">&#xe602;</i>业主停车详情</a></dd>
-              <dd>
-                <a href="javascript:;" onclick="parking()">
-                  <i class="layui-icon">&#xe602;</i>游客停车详情</a></dd>
-            <dd>
-                <a href="javascript:;" onclick="park_cost()">
-                  <i class="layui-icon">&#xe602;</i>业主停车账单详情</a></dd>
-            <dd>
-                 <a href="javascript:;" onclick="park_cost()">
-                   <i class="layui-icon">&#xe602;</i>游客停车账单详情</a></dd>
+          <dd>
+           <a href="javascript:;" onclick="parking()">
+             <i class="layui-icon">&#xe602;</i>停车登记</a></dd>
+          <dd>
+           <a href="javascript:;" onclick="user_park()">
+            <i class="layui-icon">&#xe602;</i>业主停车详情</a></dd>
+          <dd>
+            <a href="javascript:;" onclick="visitor_park()">
+              <i class="layui-icon">&#xe602;</i>游客停车详情</a></dd>
+          <dd>
+            <a href="javascript:;" onclick="park_cost()">
+              <i class="layui-icon">&#xe602;</i>业主停车账单详情</a></dd>
+          <dd>
+             <a href="javascript:;" onclick="park_cost()">
+               <i class="layui-icon">&#xe602;</i>游客停车账单详情</a></dd>
           </dl>
         </li>
+
+
+          <li class="layui-nav-item">
+            <a href="javascript:;">
+               <i class="layui-icon" >&#xe770;</i>
+               <cite>用户管理</cite>
+            </a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a href="javascript:;" onclick="user_manage()">
+                  <i class="layui-icon">&#xe602;</i>业主管理</a></dd>
+                <dd>
+                  <a href="javascript:;" onclick="visitor_manage()">
+                  <i class="layui-icon">&#xe602;</i>游客管理</a></dd>
+            </dl>
+         </li>
 
 
 
@@ -158,9 +177,7 @@
   }
 
 
-  function parking() {
-    $("#towhere").attr("src", '/user/toUserParking');
-  }
+
   function park_cost() {
       $("#towhere").attr("src", '/user/toUserParkCost');
     }
@@ -168,6 +185,40 @@
 function property_cost() {
      $("#towhere").attr("src", '/user/toUserPropertyCost');
    }
+
+
+
+
+
+  //业主停车详情页面
+function user_park() {
+     $("#towhere").attr("src", '/admin/toAdminUserPark');
+   }
+
+
+//游客停车详情页面
+function visitor_park() {
+   $("#towhere").attr("src", '/admin/toAdminVisitorPark');
+ }
+
+
+//去停车页面
+function parking() {
+  $("#towhere").attr("src", '/admin/toParking');
+}
+
+
+   //业主管理页面
+function user_manage() {
+     $("#towhere").attr("src", '/admin/toAdminUserManage');
+   }
+   //游客管理页面
+function visitor_manage() {
+     $("#towhere").attr("src", '/admin/toAdminVisitorManage');
+   }
+
+
+
 
 
    //维修管理页面
@@ -196,6 +247,7 @@ function admin_property__list() {
 function visitor_publish() {
       $("#towhere").attr("src", '/visitor/toVisitorPublish');
     }
+    //有点区别
 function article_manage() {
       $("#towhere").attr("src", '/admin/toAdminArticleManage');
     }

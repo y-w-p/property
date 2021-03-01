@@ -5,7 +5,7 @@
   Time: 11:05
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page language="java"  pageEncoding="UTF-8" contentType="text/html;charset=utf-8" isELIgnored="false" %>
+<%@ page language="java"  pageEncoding="UTF-8" contentType="text/html;charset=utf-8" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="com.ywp.data.ResultData" %>
 <%
@@ -24,8 +24,21 @@
 </head>
 <body>
 
-
-
+<div class="demoTable" >
+    <label class="layui-form-label">查询物业单:</label>
+    <div class="layui-inline" >
+        <input class="layui-input" name="user_name" id="demoReload" autocomplete="off" placeholder="输入业主名称">
+    </div>
+    <div class="layui-inline" >
+        <input class="layui-input" name="year" id="demoReload1" autocomplete="off" placeholder="请输入年份">
+    </div>
+    <div class="layui-inline" >
+        <input class="layui-input" name="month" id="demoReload2" autocomplete="off" placeholder="请输入月份">
+    </div>
+    <div class="layui-inline">
+    <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
+    </div>
+</div>
 
 
 
@@ -48,9 +61,9 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
   table.render({
     elem: '#test'
     ,url:'/admin/admin_property_cost_list' //数据接口
-    ,method:'post'
+    ,method:'get'
     ,page: true
-    ,id: 'test'
+    ,id: 'testReload'
     ,cols: [
         [ //表头
       {field: 'property_id', title: '物业账单号', sort: true}
@@ -66,6 +79,31 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
   });
 
 
+
+
+
+        var $ = layui.$, active = {
+            reload: function () {
+                var user_name = $('#demoReload');
+                var year = $('#demoReload1');
+                var month = $('#demoReload2');
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        user_name: user_name.val(),
+                        year: year.val(),
+                        month: month.val()
+                    }
+                }, 'data');
+            }
+        };
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
 
 
 

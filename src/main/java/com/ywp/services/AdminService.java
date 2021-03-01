@@ -1,9 +1,6 @@
 package com.ywp.services;
 
-import com.ywp.entity.Admin;
-import com.ywp.entity.Article;
-import com.ywp.entity.Property;
-import com.ywp.entity.Repaired;
+import com.ywp.entity.*;
 
 import java.util.List;
 
@@ -90,5 +87,100 @@ public interface AdminService {
      * 所有物业账单详情
      * @return
      */
-    List<Property> getAllPropertyCost();
+    List<Property> getAllPropertyCost(String user_name,String year,String month);
+
+
+    /**
+     * 管理员查看所有用户
+     * @param user_name
+     * @return
+     */
+    List<User> getAllUserByName(String user_name,String user_idcard,String user_carnumber);
+
+
+    /**
+     * 管理员根据ID删除业主
+     * @param user_id
+     */
+    void admin_delete_user(int user_id);
+
+
+    /**
+     * 管理员查看所有游客
+     * @param visitor_name
+     * @param visitor_phonenumber
+     * @param visitor_carnumber
+     * @return
+     */
+    List<Visitor> getAllVisitor(String visitor_name, String visitor_phonenumber, String visitor_carnumber);
+
+
+    /**
+     * 管理员根据ID删除游客
+     * @param visitor_id
+     */
+    void admin_delete_visitor(int visitor_id);
+
+
+    /**
+     * 业主停车登记
+     * @param user_park
+     * @return
+     */
+    boolean admin_user_park(User_park user_park);
+
+
+    /**
+     * 游客停车登记
+     * @param visitor_park
+     * @return
+     */
+    boolean admin_visitor_park(Visitor_park visitor_park);
+
+
+    /**
+     * 正在停车的业主停车记录
+     * @param park_location
+     * @param user_carnumber
+     * @return
+     */
+    List<User_park> getUserParking(String park_location, String user_carnumber);
+
+
+    /**
+     * 业主结束停车
+     * @param park_id
+     */
+    void admin_user_stop_park(int park_id);
+
+
+    /**
+     * 业主缴纳停车费用
+     * @param park_id
+     */
+    boolean admin_user_pay_park(int park_id);
+
+
+    /**
+     * 正在停车的游客停车记录
+     * @param park_location
+     * @param visitor_carnumber
+     * @return
+     */
+    List<Visitor_park> getVisitorParking(String park_location, String visitor_carnumber);
+
+
+    /**
+     * 游客结束停车
+     * @param park_id
+     */
+    void admin_visitor_stop_park(int park_id);
+
+
+    /**
+     * 业主缴纳停车费用
+     * @param park_id
+     * @return
+     */
+    boolean admin_visitor_pay_park(int park_id);
 }

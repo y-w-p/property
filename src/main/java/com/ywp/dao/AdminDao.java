@@ -109,5 +109,118 @@ public interface AdminDao {
      * 所有物业账单详情
      * @return
      */
-    List<Property> getAllPropertyCost();
+    List<Property> getAllPropertyCost(@Param("user_name") String user_name,@Param("year")String year,@Param("month")String month);
+
+
+    /**
+     * 管理员查看所有用户
+     * @param user_name
+     * @return
+     */
+    List<User> getAllUserByName(@Param("user_name")String user_name,@Param("user_idcard")String user_idcard,@Param("user_carnumber")String user_carnumber);
+
+
+    /**
+     * 管理员根据ID删除业主
+     * @param user_id
+     */
+    void admin_delete_user(int user_id);
+
+
+
+    /**
+     * 管理员查看所有游客
+     * @param visitor_name
+     * @param visitor_phonenumber
+     * @param visitor_carnumber
+     * @return
+     */
+    List<Visitor> getAllVisitor(@Param("visitor_name") String visitor_name, @Param("visitor_phonenumber") String visitor_phonenumber,@Param("visitor_carnumber") String visitor_carnumber);
+
+
+
+    /**
+     * 管理员根据ID删除游客
+     * @param visitor_id
+     */
+    void admin_delete_visitor(@Param("visitor_id") int visitor_id);
+
+
+
+    /**
+     * 业主停车登记
+     * @param user_park
+     * @return
+     */
+    int admin_user_park(User_park user_park);
+
+
+    /**
+     * 游客停车登记
+     * @param visitor_park
+     * @return
+     */
+    int admin_visitor_park(Visitor_park visitor_park);
+
+
+    /**
+     * 正在停车的业主停车记录
+     * @param park_location
+     * @param user_carnumber
+     * @return
+     */
+    List<User_park> getUserParking(@Param("park_location") String park_location, @Param("user_carnumber") String user_carnumber);
+
+
+    /**
+     * 业主结束停车
+     * @param park_id
+     */
+    void admin_user_stop_park(int park_id);
+
+
+    /**
+     * 通过停车单ID查找业主停车
+     * @param park_id
+     * @return
+     */
+    User_park findUserParkByID(@Param("park_id") int park_id);
+
+
+    /**
+     * 业主缴纳停车费用
+     * @param user_park
+     */
+    void admin_user_pay_park(User_park user_park);
+
+
+    /**
+     * 正在停车的游客停车记录
+     * @param park_location
+     * @param visitor_carnumber
+     * @return
+     */
+    List<Visitor_park> getVisitorParking(@Param("park_location")String park_location, @Param("visitor_carnumber")String visitor_carnumber);
+
+
+    /**
+     * 游客结束停车
+     * @param park_id
+     */
+    void admin_visitor_stop_park(int park_id);
+
+
+    /**
+     * 通过停车单ID查找游客停车
+     * @param park_id
+     * @return
+     */
+    Visitor_park findVisitorParkByID(int park_id);
+
+
+    /**
+     * 游客缴纳停车费用
+     * @param visitor_park
+     */
+    void admin_visitor_pay_park(Visitor_park visitor_park);
 }

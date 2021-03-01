@@ -2,18 +2,14 @@ package com.ywp.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.xml.internal.bind.v2.runtime.output.Encoded;
 import com.ywp.data.ResultData;
 import com.ywp.data.TableData;
-import com.ywp.entity.Admin;
-import com.ywp.entity.Article;
-import com.ywp.entity.Property;
-import com.ywp.entity.Repaired;
+import com.ywp.entity.*;
 import com.ywp.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -211,18 +207,16 @@ public class AdminController {
 
 
     /**
-     * 所有物业账单详情
+     * 所有物业账单详情,注意：method = RequestMethod.GET，前后一致，页面也是get
      * @param page
      * @param limit
-     * @param request
      * @return
      */
     @ResponseBody
-    @RequestMapping("/admin_property_cost_list")
-    public TableData admin_property_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit, @RequestParam(value = "user_name",required = false,defaultValue = "") String user_name,HttpServletRequest request){
+    @RequestMapping(value = "/admin_property_cost_list",method = RequestMethod.GET)
+    public TableData admin_property_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "user_name",required = false,defaultValue = "") String user_name,@RequestParam(value = "year",required = false,defaultValue = "")String year,@RequestParam(value = "month",required = false,defaultValue = "")String month){
         PageHelper.startPage(page,limit);
-        System.out.println(user_name);
-        List<Property> AllPropertyCostList = adminService.getAllPropertyCost();
+        List<Property> AllPropertyCostList = adminService.getAllPropertyCost(user_name,year,month);
         PageInfo<Property> pageInfo = new PageInfo<>(AllPropertyCostList);
         TableData tableData = new TableData();
         tableData.setCode(0);
@@ -233,9 +227,267 @@ public class AdminController {
     }
 
 
+    /**
+     * 管理员业主管理
+     * @param page
+     * @param limit
+     * @param user_name
+     * @param user_idcard
+     * @param user_carnumber
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/admin_user_manage",method = RequestMethod.GET)
+    public TableData admin_user_manage(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "user_name",required = false,defaultValue = "") String user_name,@RequestParam(value = "user_idcard",required = false,defaultValue = "") String user_idcard,@RequestParam(value = "user_carnumber",required = false,defaultValue = "")String user_carnumber){
+       PageHelper.startPage(page,limit);
+       List<User> allUserByName = adminService.getAllUserByName(user_name,user_idcard,user_carnumber);
+       PageInfo<User> pageInfo = new PageInfo<>(allUserByName);
+       TableData tableData = new TableData();
+       tableData.setCode(0);
+       tableData.setMsg("成功");
+       tableData.setCount(pageInfo.getTotal());
+       tableData.setData(pageInfo.getList());
+       return tableData;
+   }
 
 
 
+    /**
+     * 管理员根据ID删除业主
+     * @param user_id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/admin_delete_user")
+    public ResultData admin_delete_user(@RequestParam("user_id") int user_id){
+        adminService.admin_delete_user(user_id);
+        ResultData resultData = new ResultData();
+        resultData.setMessage("成功");
+        resultData.setStatus(true);
+        return resultData;
+    }
+
+
+    /**
+     * 管理员游客管理
+     * @param page
+     * @param limit
+     * @param visitor_name
+     * @param visitor_phonenumber
+     * @param visitor_carnumber
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/admin_visitor_manage",method = RequestMethod.GET)
+    public TableData admin_visitor_manage(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "visitor_name",required = false,defaultValue = "") String visitor_name,@RequestParam(value = "visitor_phonenumber",required = false,defaultValue = "") String visitor_phonenumber,@RequestParam(value = "visitor_carnumber",required = false,defaultValue = "")String visitor_carnumber){
+       PageHelper.startPage(page,limit);
+       List<Visitor> allVisitor = adminService.getAllVisitor(visitor_name, visitor_phonenumber, visitor_carnumber);
+       PageInfo<Visitor> pageInfo = new PageInfo<>(allVisitor);
+       TableData tableData = new TableData();
+       tableData.setCode(0);
+       tableData.setMsg("成功");
+       tableData.setCount(pageInfo.getTotal());
+       tableData.setData(pageInfo.getList());
+       return tableData;
+   }
+
+
+
+    /**
+    * 管理员根据ID删除游客
+    * @param visitor_id
+    * @return
+    */
+   @ResponseBody
+   @RequestMapping("/admin_delete_visitor")
+   public ResultData admin_delete_visitor(@RequestParam("visitor_id") int visitor_id){
+       adminService.admin_delete_visitor(visitor_id);
+       ResultData resultData = new ResultData();
+       resultData.setMessage("成功");
+       resultData.setStatus(true);
+       return resultData;
+   }
+
+
+    /**
+     * 停车登记
+     * @param id
+     * @param role
+     * @param carnumber
+     * @param park_location
+     * @param session
+     * @return
+     */
+    @RequestMapping("/admin_parking")
+    public String admin_parking(@RequestParam("id") String id, @RequestParam("role") String role,@RequestParam("carnumber") String carnumber, @RequestParam("park_location") String park_location,HttpSession session){
+        //输入了数据
+       if(!id.equals("") && !role.equals("") && !carnumber.equals("") && !park_location.equals("")){
+           boolean flag = false;
+            if(role.equals("业主")){
+                User_park user_park = new User_park();
+                user_park.setUser_id(Integer.valueOf(id));
+                user_park.setPark_location(park_location);
+                user_park.setUser_carnumber(carnumber);
+                user_park.setStatus("0");
+                flag = adminService.admin_user_park(user_park);
+                if(flag){
+                    //发布成功
+                    session.setAttribute("park_msg","登记成功，请转至业主停车详情页面查看具体详情");
+                    return "admin/admin_parking";
+                }
+            }
+            if(role.equals("游客")){
+                Visitor_park visitor_park = new Visitor_park();
+                visitor_park.setVisitor_id(Integer.valueOf(id));
+                visitor_park.setPark_location(park_location);
+                visitor_park.setVisitor_carnumber(carnumber);
+                visitor_park.setStatus("0");
+                flag = adminService.admin_visitor_park(visitor_park);
+                if(flag){
+                    //发布成功
+                    session.setAttribute("park_msg","登记成功，请转至游客停车详情页面查看具体详情");
+                    return "admin/admin_parking";
+                }
+            }
+
+       }
+
+       //发布失败，返回发布页面
+       session.setAttribute("park_msg","登记失败，请重新登记");
+       return "admin/admin_parking";
+    }
+
+
+    /**
+     * 业主停车详情页面
+     * @param page
+     * @param limit
+     * @param park_location
+     * @param user_carnumber
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/admin_user_park_list",method = RequestMethod.GET)
+    public TableData admin_user_park_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "park_location",required = false,defaultValue = "") String park_location,@RequestParam(value = "user_carnumber",required = false,defaultValue = "")String user_carnumber){
+       PageHelper.startPage(page,limit);
+       List<User_park> userParking = adminService.getUserParking(park_location, user_carnumber);
+       PageInfo<User_park> pageInfo = new PageInfo<>(userParking);
+       TableData tableData = new TableData();
+       tableData.setCode(0);
+       tableData.setMsg("成功");
+       tableData.setCount(pageInfo.getTotal());
+       tableData.setData(pageInfo.getList());
+       return tableData;
+   }
+
+
+    /**
+     * 业主结束停车
+     * @param park_id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/admin_user_stop_park")
+    public ResultData admin_user_stop_park(@RequestParam("park_id") int park_id){
+        adminService.admin_user_stop_park(park_id);
+        ResultData resultData = new ResultData();
+        resultData.setMessage("成功");
+        resultData.setStatus(true);
+        return resultData;
+    }
+
+
+
+    /**
+    * 业主缴纳停车费用
+    * @param park_id
+    * @return
+    */
+   @ResponseBody
+   @RequestMapping("/admin_user_pay_park")
+   public ResultData admin_user_pay_park(@RequestParam("park_id") int park_id){
+       boolean flag = adminService.admin_user_pay_park(park_id);
+       if(flag){
+          ResultData resultData = new ResultData();
+          resultData.setMessage("成功");
+          resultData.setStatus(true);
+          return resultData;
+       }
+       ResultData resultData = new ResultData();
+       resultData.setMessage("失败");
+       resultData.setStatus(false);
+       return resultData;
+
+   }
+
+
+
+
+    /**
+    * 业主停车详情页面
+    * @param page
+    * @param limit
+    * @param park_location
+    * @param visitor_carnumber
+    * @return
+    */
+   @ResponseBody
+   @RequestMapping(value = "/admin_visitor_park_list",method = RequestMethod.GET)
+   public TableData admin_visitor_park_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "park_location",required = false,defaultValue = "") String park_location,@RequestParam(value = "visitor_carnumber",required = false,defaultValue = "")String visitor_carnumber){
+      PageHelper.startPage(page,limit);
+      List<Visitor_park> visitorParking = adminService.getVisitorParking(park_location, visitor_carnumber);
+      PageInfo<Visitor_park> pageInfo = new PageInfo<>(visitorParking);
+      TableData tableData = new TableData();
+      tableData.setCode(0);
+      tableData.setMsg("成功");
+      tableData.setCount(pageInfo.getTotal());
+      tableData.setData(pageInfo.getList());
+      return tableData;
+  }
+
+
+
+
+    /**
+    * 游客结束停车
+    * @param park_id
+    * @return
+    */
+   @ResponseBody
+   @RequestMapping("/admin_visitor_stop_park")
+   public ResultData admin_visitor_stop_park(@RequestParam("park_id") int park_id){
+       adminService.admin_visitor_stop_park(park_id);
+       ResultData resultData = new ResultData();
+       resultData.setMessage("成功");
+       resultData.setStatus(true);
+       return resultData;
+   }
+
+
+
+
+
+    /**
+    * 业主缴纳停车费用
+    * @param park_id
+    * @return
+    */
+   @ResponseBody
+   @RequestMapping("/admin_visitor_pay_park")
+   public ResultData admin_visitor_pay_park(@RequestParam("park_id") int park_id){
+       boolean flag = adminService.admin_visitor_pay_park(park_id);
+       if(flag){
+          ResultData resultData = new ResultData();
+          resultData.setMessage("成功");
+          resultData.setStatus(true);
+          return resultData;
+       }
+       ResultData resultData = new ResultData();
+       resultData.setMessage("失败");
+       resultData.setStatus(false);
+       return resultData;
+
+   }
 
 
 
@@ -296,6 +548,61 @@ public class AdminController {
    public String toAdminPropertyCostList(){
        return "admin/admin_property_cost_list";
    }
+
+
+    /**
+     * 去业主管理页面
+     * @return
+     */
+   @RequestMapping("/toAdminUserManage")
+   public String toAdminUserManage(){
+       return "admin/admin_user_manage";
+   }
+
+
+
+    /**
+     * 去游客管理页面
+     * @return
+     */
+   @RequestMapping("/toAdminVisitorManage")
+   public String toAdminVisitorManage(){
+       return "admin/admin_visitor_manage";
+   }
+
+
+    /**
+     * 去停车登记页面
+     * @return
+     */
+   @RequestMapping("/toParking")
+   public String toParking(){
+       return "admin/admin_parking";
+   }
+
+
+
+    /**
+     * 去业主停车详情页面
+     * @return
+     */
+   @RequestMapping("/toAdminUserPark")
+   public String toAdminUserPark(){
+
+       return "admin/admin_user_park";
+   }
+
+
+    /**
+     * 去游客停车详情页面
+     * @return
+     */
+   @RequestMapping("/toAdminVisitorPark")
+   public String toAdminVisitorPark(){
+
+       return "admin/admin_visitor_park";
+   }
+
 
 
 }

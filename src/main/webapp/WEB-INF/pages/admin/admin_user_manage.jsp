@@ -25,9 +25,12 @@
 <body>
 
 <div class="demoTable" >
-    <label class="layui-form-label">查询记录:</label>
+    <label class="layui-form-label">查询业主:</label>
     <div class="layui-inline" >
-        <input class="layui-input" name="park_location" id="demoReload1" autocomplete="off" placeholder="请输入停车位">
+        <input class="layui-input" name="user_name" id="demoReload" autocomplete="off" placeholder="请输入业主名称">
+    </div>
+    <div class="layui-inline" >
+        <input class="layui-input" name="user_idcard" id="demoReload1" autocomplete="off" placeholder="请输入身份证号">
     </div>
     <div class="layui-inline" >
        <input class="layui-input" name="user_carnumber" id="demoReload2" autocomplete="off" placeholder="请输入汽车牌号">
@@ -45,8 +48,7 @@
 
 <%--头部工具栏--%>
 <script type="text/html" id="barDemo">
-  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="user_stop_park">结束</a>
-  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="user_pay_park">缴费</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="user_del">删除</a>
 </script>
 
 
@@ -64,20 +66,19 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
   //第一个实例
   table.render({
     elem: '#test'
-    ,url:'/admin/admin_user_park_list' //数据接口
+    ,url:'/admin/admin_user_manage' //数据接口
     ,method:'get'
     ,page: true
     ,id: 'testReload'
     ,cols: [
         [ //表头
-       {field: 'park_id', title: '停车单号', sort: true}
-      ,{field: 'user_id', title: '业主编号', sort: true}
-      ,{field: 'user_carnumber', title: '车牌号',sort: true}
-      ,{field: 'park_location', title: '停车位',sort: true}
-      ,{field: 'park_start_time', title: '开始停车时间',width:170, sort: true}
-      ,{field: 'park_end_time', title: '结束停车时间',width:170, sort: true}
-      ,{field: 'cost', title: '金额(元)',width:100, sort: true}
-      ,{field: 'status', title: '状态', sort: true}
+      {field: 'user_id', title: '业主编号', sort: true}
+      ,{field: 'user_name', title: '业主名称',sort:true}
+      ,{field: 'user_idcard', title: '身份证号',width:180,sort:true}
+      ,{field: 'user_phonenumber', title: '联系电话'}
+      ,{field: 'user_address', title: '家庭住址',sort: true}
+      ,{field: 'user_area', title: '住房面积',width:180,sort: true}
+      ,{field: 'user_carnumber', title: '汽车牌号',sort: true}
       ,{fixed: 'right', title:'操作', toolbar: '#barDemo'}
         ]
       ]
@@ -89,7 +90,8 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
 
         var $ = layui.$, active = {
             reload: function () {
-                var park_location = $('#demoReload1');
+                var user_name = $('#demoReload');
+                var user_idcard = $('#demoReload1');
                 var user_carnumber = $('#demoReload2');
                 //执行重载
                 table.reload('testReload', {
@@ -97,7 +99,8 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
                         curr: 1 //重新从第 1 页开始
                     }
                     , where: {
-                        park_location:park_location.val(),
+                        user_name: user_name.val(),
+                        user_idcard:user_idcard.val(),
                         user_carnumber:user_carnumber.val()
                     }
                 }, 'data');
@@ -112,19 +115,18 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
 
 
 
-        //操作
+        //删除操作
         //监听行工具事件
          table.on('tool(test)', function(obj){
              var checkStatus =obj.data;
-             var park_id = checkStatus.park_id;
-             //结束操作
-             if(obj.event === 'user_stop_park'){
-                 layer.confirm('该车确定结束停车吗？',{btn:["确定","取消"]},
+             var user_id = checkStatus.user_id;
+             if(obj.event === 'user_del'){
+                 layer.confirm('确定要删除该业主吗？',{btn:["确定","取消"]},
                  //确定事件
                  function () {
                      $.ajax({
-                       url:"/admin/admin_user_stop_park",
-                       data:"park_id="+park_id,
+                       url:"/admin/admin_delete_user",
+                       data:"user_id="+user_id,
                        method:'post',
                        traditional:true,
                        success:function (result) {
@@ -146,41 +148,6 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
                  }
                  )
              }
-
-
-
-            //缴费操作
-              if(obj.event === 'user_pay_park'){
-                  layer.confirm('确定缴费吗吗？',{btn:["确定","取消"]},
-                  //确定事件
-                  function () {
-                      $.ajax({
-                        url:"/admin/admin_user_pay_park",
-                        data:"park_id="+park_id,
-                        method:'post',
-                        traditional:true,
-                        success:function (result) {
-                            if(result.status){
-                              table.reload('testReload',{});//重新加载数据
-                            }else {
-                                alert(result.message);
-                            }
-                            layer.closeAll('dialog');//有效
-                        }
-                      })
-
-
-                  }
-
-                  //取消事件
-                  ,function () {
-                      layer.close();
-                  }
-                  )
-              }
-
-
-
 
          });
 
