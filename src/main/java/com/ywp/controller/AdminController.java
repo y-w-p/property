@@ -95,9 +95,9 @@ public class AdminController {
     /**
      * 查找所有维修上报记录
      */
-  @ResponseBody
-  @RequestMapping("/admin_repaired_list")
-  public TableData admin_repaired_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit){
+    @ResponseBody
+    @RequestMapping("/admin_repaired_list")
+    public TableData admin_repaired_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit){
 
       PageHelper.startPage(page,limit);
       List<Repaired> AllRepairedList = adminService.findRepairedAll();
@@ -108,7 +108,7 @@ public class AdminController {
       tableData.setCount(pageInfo.getTotal());
       tableData.setData(pageInfo.getList());
       return tableData;
-  }
+    }
 
 
 
@@ -577,6 +577,67 @@ public class AdminController {
    }
 
 
+    /**
+     * 管理员发布通告
+     * @param topic
+     * @param content
+     * @param request
+     * @return
+     */
+   @RequestMapping("/admin_publish_message")
+    public String admin_publish_message(@RequestParam("topic")String topic,@RequestParam("content") String content,HttpServletRequest request,HttpSession session){
+       if(!topic.equals("") && !content.equals("")){
+           int admin_id = (int) request.getSession().getAttribute("id");
+           boolean flag = adminService.admin_publish_message(admin_id,topic,content);
+           if(flag){
+             //发布成功
+              session.setAttribute("publish_message_msg","发布通告成功，具体详情至公告详情页面查看");
+             return "admin/admin_publish_message";
+           }
+       }
+       session.setAttribute("publish_message_msg","发布通告失败，请重新发布");
+       return "admin/admin_publish_message";
+    }
+
+
+    /**
+     * 通告详情
+     * @param page
+     * @param limit
+     * @param user_name
+     * @param topic
+     * @param content
+     * @return
+     */
+   @ResponseBody
+   @RequestMapping(value = "/admin_message_list")
+   public TableData admin_message_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "user_name",required = false,defaultValue = "") String user_name,@RequestParam(value = "topic",required = false,defaultValue = "") String topic,@RequestParam(value = "content",required = false,defaultValue = "")String content){
+      PageHelper.startPage(page,limit);
+      List<Message> messageList = adminService.getMessageList(user_name,topic,content);
+      PageInfo<Message> pageInfo = new PageInfo<>(messageList);
+      TableData tableData = new TableData();
+      tableData.setCode(0);
+      tableData.setMsg("成功");
+      tableData.setCount(pageInfo.getTotal());
+      tableData.setData(pageInfo.getList());
+      return tableData;
+  }
+
+
+    /**
+     * 管理员删除通告
+     * @param message_ids
+     * @return
+     */
+   @ResponseBody
+   @RequestMapping("/admin_delete_message")
+   public ResultData admin_delete_message(@RequestParam("message_id") int[] message_ids){
+      adminService.admin_delete_message(message_ids);
+      ResultData resultData = new ResultData();
+      resultData.setMessage("成功");
+      resultData.setStatus(true);
+      return resultData;
+   }
 
 
 
@@ -709,6 +770,28 @@ public class AdminController {
     }
 
 
+
+    /**
+    * 发布通告页面
+    * @return
+    */
+    @RequestMapping("/toAdminPublishMessage")
+    public String toAdminPublishMessage(){
+
+        return "admin/admin_publish_message";
+    }
+
+
+
+    /**
+    * 通告详情页面
+    * @return
+    */
+    @RequestMapping("/toAdminPublishMessageList")
+    public String toAdminPublishMessageList(){
+
+        return "admin/admin_message_manage";
+    }
 
 
 }

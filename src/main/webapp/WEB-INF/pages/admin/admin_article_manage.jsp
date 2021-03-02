@@ -50,6 +50,8 @@ layui.use(['table','jquery','layer'], function(){
         ]
       ]
   });
+
+
     //头工具栏事件
       table.on('toolbar(test)', function(obj){
         var checkStatus = table.checkStatus("test");
@@ -87,6 +89,16 @@ layui.use(['table','jquery','layer'], function(){
             break;
         };
       });
+
+
+
+
+
+
+
+
+
+
 });
 </script>
 </body>

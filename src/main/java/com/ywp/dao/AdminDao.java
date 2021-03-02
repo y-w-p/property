@@ -258,4 +258,35 @@ public interface AdminDao {
      */
     void admin_delete_visitor_park(@Param("park_id")int park_id);
 
+
+    /**
+     * 先插入到信息内容表
+     * @param message
+     * @return
+     */
+    int admin_publish_message_text(Message message);
+
+
+    /**
+     * 管理员发布通告
+     * @param message
+     */
+    void admin_publish_message(Message message);
+
+
+    /**
+     * 通告详情
+     * @param user_name
+     * @param topic
+     * @param content
+     * @return
+     */
+    List<Message> getMessageList(@Param("user_name") String user_name, @Param("topic")String topic, @Param("content")String content);
+
+
+    /**
+     * 管理员删除通告
+     * @param message_ids
+     */
+    void admin_delete_message(int[] message_ids);
 }

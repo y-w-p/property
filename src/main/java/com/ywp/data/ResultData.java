@@ -28,7 +28,7 @@ public class ResultData {
     public String toString() {
         return "ResultData{" +
                 "status=" + status +
-                ", message='" + message + '\'' +
+                ", Message='" + message + '\'' +
                 '}';
     }
 }

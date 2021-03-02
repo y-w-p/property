@@ -492,4 +492,71 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
+    /**
+     * 管理员发布通告
+     * @param admin_id
+     * @param topic
+     * @param content
+     * @return
+     */
+    @Override
+    public boolean admin_publish_message(int admin_id, String topic, String content) {
+        //先插入到信息内容表
+        Message msg = new Message();
+        msg.setTopic(topic);
+        msg.setContent(content);
+        //message_text_id只是为了接收返回值，1为成功，0为失败，获取的ID已经封装到对象中了
+        int message_text_id = adminDao.admin_publish_message_text(msg);
+        if(!String.valueOf(message_text_id).equals("")){
+            //获取所有已注册用户
+           Message message = new Message();
+           List<User> userAll = adminDao.findUserAll();
+           for(User user:userAll){
+               message.setAdmin_id(admin_id);
+               message.setUser_id(user.getUser_id());
+               //会自动封装到之间的对象中
+               message.setMessage_text_id(msg.getMessage_text_id());
+               //0,状态：未阅读
+               message.setStatus("0");
+               //插入信息表，不同于admin_publish_message_text
+               adminDao.admin_publish_message(message);
+           }
+           return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 通告详情
+     * @param user_name
+     * @param topic
+     * @param content
+     * @return
+     */
+    @Override
+    public List<Message> getMessageList(String user_name, String topic, String content) {
+        List<Message> messageList = adminDao.getMessageList(user_name, topic, content);
+        for(Message message:messageList){
+            if(message.getStatus().equals("0")){
+                message.setStatus("未阅读");
+            }
+            if(message.getStatus().equals("1")){
+                message.setStatus("已阅读");
+            }
+        }
+        return messageList;
+    }
+
+
+    /**
+     * 管理员删除通告
+     * @param message_ids
+     */
+    @Override
+    public void admin_delete_message(int[] message_ids) {
+        adminDao.admin_delete_message(message_ids);
+    }
+
+
 }

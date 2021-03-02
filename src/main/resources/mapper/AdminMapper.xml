@@ -341,10 +341,70 @@
           delete from visitor_park where park_id = #{park_id}
       </delete>
 
-
     <!--停车管理-->
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+    <!--通告管理-->
+    <!--先插入到信息内容表-->
+    <insert id="admin_publish_message_text" parameterType="com.ywp.entity.Message">
+      <selectKey keyProperty="message_text_id" keyColumn="message_text_id" resultType="int" order="AFTER">
+             select last_insert_id()
+      </selectKey>
+      insert into message_text(topic,content) values (#{topic},#{content})
+    </insert>
+
+    <!--管理员发布通告-->
+    <insert id="admin_publish_message" parameterType="com.ywp.entity.Message">
+      insert into message(admin_id,user_id,message_text_id,publish_time,status) values (#{admin_id},#{user_id},#{message_text_id},now(),#{status})
+    </insert>
+
+
+    <!--通告详情-->
+    <select id="getMessageList" parameterType="String" resultType="com.ywp.entity.Message">
+        SELECT message_id,admin_name,user_name,topic,content,publish_time,status FROM message m,message_text mt,admin a,user u WHERE m.admin_id = a.admin_id and m.user_id = u.user_id and m.message_text_id = mt.message_text_id
+          <if test="user_name!=null and user_name != ''">
+                and user_name like "%"#{user_name}"%"
+          </if>
+          <if test="topic!=null and topic != ''">
+                 and topic like "%"#{topic}"%"
+          </if>
+          <if test="content!=null and content != ''">
+                 and content like "%"#{content}"%"
+          </if>
+    </select>
+
+
+
+    <!--管理员删除通告-->
+    <delete id="admin_delete_message">
+        delete from message
+            <where>
+                message_id in
+                <foreach collection="array" item="message_id" open="(" close=")" separator=",">
+                    #{message_id}
+                </foreach>
+            </where>
+    </delete>
+
+
+
+
+
+
+
+
+    <!--通告管理-->
 
 </mapper>

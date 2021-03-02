@@ -30,9 +30,10 @@
        <a href="javascript:;" onclick="welcome()">主页</a>
      </li>
       <li class="layui-nav-item">
-        <a href="javascript:;">通知</a>
+        <a href="javascript:;"><i class="layui-icon">&#xe609;</i>通告</a>
         <dl class="layui-nav-child">
-          <dd><a href="">消息管理</a></dd>
+          <dd><a href="/admin/toAdminPublishMessage" target="towhere">发布公告</a></dd>
+            <dd><a href="/admin/toAdminPublishMessageList" target="towhere">公告详情</a></dd>
         </dl>
       </li>
     </ul>
@@ -176,6 +177,19 @@
     $("#towhere").attr("src", '/main/toWelcome');
   }
 
+
+//发布通告页面
+  function Publish_message() {
+    $("#towhere").attr("src", '/main/toAdminPublishMessage');
+  }
+
+
+
+
+//通告详情页面
+function message_list() {
+$("#towhere").attr("src", '/main/toAdminPublishMessageList');
+}
 
 //业主停车账单详情页面
   function user_park_cost() {

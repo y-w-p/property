@@ -216,4 +216,30 @@ public interface AdminService {
      * @param park_id
      */
     void admin_delete_visitor_park(int park_id);
+
+    /**
+     * 管理员发布通告
+     * @param admin_id
+     * @param topic
+     * @param content
+     * @return
+     */
+    boolean admin_publish_message(int admin_id, String topic, String content);
+
+
+    /**
+     * 通告详情
+     * @param user_name
+     * @param topic
+     * @param content
+     * @return
+     */
+    List<Message> getMessageList(String user_name, String topic, String content);
+
+
+    /**
+     * 管理员删除通告
+     * @param message_ids
+     */
+    void admin_delete_message(int[] message_ids);
 }
