@@ -57,7 +57,7 @@ layui.use(['table','jquery','layer'], function(){
           case 'delete':
             var data = checkStatus.data; //当前选中的数据
             if(data.length > 0){
-                layer.confirm('想清楚了，确定删除吗？',{btn:["确定","取消"]},
+                layer.confirm('想清楚了，确定要删除选中的帖子吗？',{btn:["确定","取消"]},
                     function () {
                        //删除数据
                        var article_id = [];

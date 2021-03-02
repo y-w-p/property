@@ -183,4 +183,37 @@ public interface AdminService {
      * @return
      */
     boolean admin_visitor_pay_park(int park_id);
+
+
+    /**
+     * 业主停车账单页面
+     * @param user_name
+     * @param park_location
+     * @param user_carnumber
+     * @return
+     */
+    List<User_park> getUserParkCost(String user_name, String park_location, String user_carnumber);
+
+
+    /**
+     * 管理员删除业主停车记录
+     * @param park_id
+     */
+    void admin_delete_user_park(int park_id);
+
+
+    /**
+     * 游客停车账单页面
+     * @param visitor_name
+     * @param park_location
+     * @param visitor_carnumber
+     * @return
+     */
+    List<Visitor_park> getVisitorParkCost(String visitor_name, String park_location, String visitor_carnumber);
+
+    /**
+     * 管理员删除游客停车记录
+     * @param park_id
+     */
+    void admin_delete_visitor_park(int park_id);
 }

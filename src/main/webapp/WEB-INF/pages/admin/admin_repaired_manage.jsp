@@ -77,7 +77,7 @@ layui.use(['table','jquery','layer'], function(){
           case 'delete':
             var data = checkStatus.data; //当前选中的数据
             if(data.length > 0){
-                layer.confirm('想清楚了，确定删除吗？',{btn:["确定","取消"]},
+                layer.confirm('想清楚了，确定删除选中的维修单吗？',{btn:["确定","取消"]},
                     function () {
                        //删除数据
                        var repaired_id = [];
@@ -117,7 +117,7 @@ layui.use(['table','jquery','layer'], function(){
            var repaired_id = checkStatus.repaired_id;
            //未通过审核
            if(obj.event === 'check_no'){
-               layer.confirm('确定不通过审核吗？',{btn:["确定","取消"]},
+               layer.confirm('确定维修单号为"'+repaired_id+'"的维修单不通过审核吗？',{btn:["确定","取消"]},
                //确定事件
                function () {
                    $.ajax({
@@ -151,7 +151,7 @@ layui.use(['table','jquery','layer'], function(){
 
            //通过审核，等待维修
            if(obj.event === 'checked'){
-                  layer.confirm('确定通过审核吗？',{btn:["确定","取消"]},
+                  layer.confirm('确定维修单号为"'+repaired_id+'"的维修单通过审核吗？',{btn:["确定","取消"]},
                   //确定事件
                   function () {
                       $.ajax({
@@ -187,7 +187,7 @@ layui.use(['table','jquery','layer'], function(){
 
            //已维修
            if(obj.event === 'repaired'){
-              layer.confirm('确定已维修吗？',{btn:["确定","取消"]},
+              layer.confirm('确定维修单号为"'+repaired_id+'"的维修单已维修吗？',{btn:["确定","取消"]},
               //确定事件
               function () {
                   $.ajax({

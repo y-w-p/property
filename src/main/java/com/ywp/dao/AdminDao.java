@@ -223,4 +223,39 @@ public interface AdminDao {
      * @param visitor_park
      */
     void admin_visitor_pay_park(Visitor_park visitor_park);
+
+
+    /**
+     * 业主停车账单页面
+     * @param user_name
+     * @param park_location
+     * @param user_carnumber
+     * @return
+     */
+    List<User_park> getUserParkCost(@Param("user_name") String user_name,@Param("park_location")String park_location, @Param("user_carnumber") String user_carnumber);
+
+    /**
+     * 管理员删除业主停车记录
+     * @param park_id
+     */
+    void admin_delete_user_park(@Param("park_id")int park_id);
+
+
+    /**
+     * 游客停车账单页面
+     * @param visitor_name
+     * @param park_location
+     * @param visitor_carnumber
+     * @return
+     */
+    List<Visitor_park> getVisitorParkCost(@Param("visitor_name")String visitor_name, @Param("park_location")String park_location, @Param("visitor_carnumber")String visitor_carnumber);
+
+
+
+    /**
+     * 管理员删除游客停车记录
+     * @param park_id
+     */
+    void admin_delete_visitor_park(@Param("park_id")int park_id);
+
 }

@@ -118,9 +118,10 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
          table.on('tool(test)', function(obj){
              var checkStatus =obj.data;
              var visitor_id = checkStatus.visitor_id;
+             var visitor_name = checkStatus.visitor_name;
              if(obj.event === 'visitor_del'){
                  console.log(visitor_id);
-                 layer.confirm('确定要删除该游客吗？',{btn:["确定","取消"]},
+                 layer.confirm('确定要删除游客"'+visitor_name+'"吗？',{btn:["确定","取消"]},
                  //确定事件
                  function () {
                      $.ajax({

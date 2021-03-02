@@ -65,7 +65,7 @@ layui.use(['table','jquery','layer'], function(){
         var checkStatus =obj.data;
         var property_id = checkStatus.property_id;
         if(obj.event === 'property_cost'){
-            layer.confirm('确定要缴费吗？',{btn:["确定","取消"]},
+            layer.confirm('物业账单号为"'+property_id+'"的账单确定缴费吗？',{btn:["确定","取消"]},
             //确定事件
             function () {
                 $.ajax({

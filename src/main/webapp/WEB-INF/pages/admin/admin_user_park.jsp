@@ -117,9 +117,10 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
          table.on('tool(test)', function(obj){
              var checkStatus =obj.data;
              var park_id = checkStatus.park_id;
+             var user_carnumber = checkStatus.user_carnumber;
              //结束操作
              if(obj.event === 'user_stop_park'){
-                 layer.confirm('该车确定结束停车吗？',{btn:["确定","取消"]},
+                 layer.confirm('该车'+user_carnumber+'确定结束停车吗？',{btn:["确定","取消"]},
                  //确定事件
                  function () {
                      $.ajax({
@@ -151,7 +152,7 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
 
             //缴费操作
               if(obj.event === 'user_pay_park'){
-                  layer.confirm('确定缴费吗吗？',{btn:["确定","取消"]},
+                  layer.confirm('停车单号为'+park_id+'的账单确定缴费吗？',{btn:["确定","取消"]},
                   //确定事件
                   function () {
                       $.ajax({

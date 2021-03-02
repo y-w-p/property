@@ -424,7 +424,7 @@ public class AdminController {
 
 
     /**
-    * 业主停车详情页面
+    * 游客停车详情页面
     * @param page
     * @param limit
     * @param park_location
@@ -468,7 +468,7 @@ public class AdminController {
 
 
     /**
-    * 业主缴纳停车费用
+    * 游客缴纳停车费用
     * @param park_id
     * @return
     */
@@ -490,9 +490,91 @@ public class AdminController {
    }
 
 
+    /**
+     * 业主停车账单页面
+     * @param page
+     * @param limit
+     * @param user_name
+     * @param park_location
+     * @param user_carnumber
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/admin_user_park_cost",method = RequestMethod.GET)
+    public TableData admin_user_park_cost(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "user_name",required = false,defaultValue = "") String user_name,@RequestParam(value = "park_location",required = false,defaultValue = "") String park_location,@RequestParam(value = "user_carnumber",required = false,defaultValue = "")String user_carnumber){
+       PageHelper.startPage(page,limit);
+       List<User_park> userParkCost = adminService.getUserParkCost(user_name,park_location, user_carnumber);
+       PageInfo<User_park> pageInfo = new PageInfo<>(userParkCost);
+       TableData tableData = new TableData();
+       tableData.setCode(0);
+       tableData.setMsg("成功");
+       tableData.setCount(pageInfo.getTotal());
+       tableData.setData(pageInfo.getList());
+       return tableData;
+   }
 
 
 
+
+
+    /**
+    * 管理员删除业主停车记录
+    * @param park_id
+    * @return
+    */
+   @ResponseBody
+   @RequestMapping("/admin_delete_user_park")
+   public ResultData admin_delete_user_park(@RequestParam("park_id") int park_id){
+
+      adminService.admin_delete_user_park(park_id);
+      ResultData resultData = new ResultData();
+      resultData.setMessage("成功");
+      resultData.setStatus(true);
+      return resultData;
+   }
+
+
+    /**
+     * 游客停车账单页面
+     * @param page
+     * @param limit
+     * @param visitor_name
+     * @param park_location
+     * @param visitor_carnumber
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/admin_visitor_park_cost",method = RequestMethod.GET)
+    public TableData admin_visitor_park_cost(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "visitor_name",required = false,defaultValue = "") String visitor_name,@RequestParam(value = "park_location",required = false,defaultValue = "") String park_location,@RequestParam(value = "visitor_carnumber",required = false,defaultValue = "")String visitor_carnumber){
+       PageHelper.startPage(page,limit);
+       List<Visitor_park> userParkCost = adminService.getVisitorParkCost(visitor_name,park_location, visitor_carnumber);
+       PageInfo<Visitor_park> pageInfo = new PageInfo<>(userParkCost);
+       TableData tableData = new TableData();
+       tableData.setCode(0);
+       tableData.setMsg("成功");
+       tableData.setCount(pageInfo.getTotal());
+       tableData.setData(pageInfo.getList());
+       return tableData;
+   }
+
+
+
+
+   /**
+    * 管理员删除游客停车记录
+    * @param park_id
+    * @return
+    */
+   @ResponseBody
+   @RequestMapping("/admin_delete_visitor_park")
+   public ResultData admin_delete_visitor_park(@RequestParam("park_id") int park_id){
+
+      adminService.admin_delete_visitor_park(park_id);
+      ResultData resultData = new ResultData();
+      resultData.setMessage("成功");
+      resultData.setStatus(true);
+      return resultData;
+   }
 
 
 
@@ -602,6 +684,30 @@ public class AdminController {
 
        return "admin/admin_visitor_park";
    }
+
+
+
+    /**
+    * 业主停车账单详情页面
+    * @return
+    */
+    @RequestMapping("/toAdminUserParkCost")
+    public String toAdminUserParkCost(){
+
+        return "admin/admin_user_park_cost";
+    }
+
+
+    /**
+    * 游客停车账单详情页面
+    * @return
+    */
+    @RequestMapping("/toAdminVisitorParkCost")
+    public String toAdminVisitorParkCost(){
+
+        return "admin/admin_visitor_park_cost";
+    }
+
 
 
 

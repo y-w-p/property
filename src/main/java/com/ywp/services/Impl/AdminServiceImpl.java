@@ -426,4 +426,70 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
+    /**
+     * 业主停车账单页面
+     * @param user_name
+     * @param park_location
+     * @param user_carnumber
+     * @return
+     */
+    @Override
+    public List<User_park> getUserParkCost(String user_name, String park_location, String user_carnumber) {
+        List<User_park> user_park_cost = adminDao.getUserParkCost(user_name,park_location,user_carnumber);
+        for(User_park user_park:user_park_cost){
+            if(user_park.getStatus().equals("1")){
+                user_park.setStatus("已缴费");
+            }
+            if(user_park.getStatus().equals("0")){
+                user_park.setStatus("未缴费");
+            }
+
+        }
+        return user_park_cost;
+    }
+
+
+    /**
+     * 管理员删除业主停车记录
+     * @param park_id
+     */
+    @Override
+    public void admin_delete_user_park(int park_id) {
+        adminDao.admin_delete_user_park(park_id);
+    }
+
+
+    /**
+     * 游客停车账单页面
+     * @param visitor_name
+     * @param park_location
+     * @param visitor_carnumber
+     * @return
+     */
+    @Override
+    public List<Visitor_park> getVisitorParkCost(String visitor_name, String park_location, String visitor_carnumber) {
+        List<Visitor_park> visitor_park_cost = adminDao.getVisitorParkCost(visitor_name,park_location,visitor_carnumber);
+        for(Visitor_park visitor_park:visitor_park_cost){
+            if(visitor_park.getStatus().equals("1")){
+                visitor_park.setStatus("已缴费");
+            }
+            if(visitor_park.getStatus().equals("0")){
+                visitor_park.setStatus("未缴费");
+            }
+
+        }
+        return visitor_park_cost;
+    }
+
+
+    /**
+     * 管理员删除游客停车记录
+     * @param park_id
+     */
+    @Override
+    public void admin_delete_visitor_park(int park_id) {
+        adminDao.admin_delete_visitor_park(park_id);
+    }
+
+
 }

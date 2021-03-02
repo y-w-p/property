@@ -47,10 +47,10 @@ layui.use(['table','jquery','layer'], function(){
         [ //表头
        {field: 'park_id', title: '停车账单号', sort: true}
       ,{field: 'user_name', title: '业主名称'}
-      ,{field: 'user_carnumber', title: '业主牌号'}
-      ,{field: 'park_start_time', title: '开始停车时间',sort: true}
-      ,{field: 'park_end_time', title: '结束停车时间',sort: true}
-      ,{field: 'period', title: '时长（分钟）',sort: true}
+      ,{field: 'user_carnumber', title: '汽车牌号'}
+      ,{field: 'park_start_time', title: '开始停车时间',width:160,sort: true}
+      ,{field: 'park_end_time', title: '结束停车时间',width:160,sort: true}
+      ,{field: 'period', title: '时长（分钟）',width:130,sort: true}
       ,{field: 'cost', title: '金额（单位：元，5元/天）：',sort: true}
       ,{field: 'status', title: '缴费状态',sort: true}
       ,{fixed: 'right', title:'操作', toolbar: '#barDemo'}
@@ -66,7 +66,7 @@ layui.use(['table','jquery','layer'], function(){
          var checkStatus =obj.data;
          var park_id = checkStatus.park_id;
          if(obj.event === 'park_cost'){
-             layer.confirm('确定要缴费吗？',{btn:["确定","取消"]},
+             layer.confirm('停车账单号为"'+park_id+'"的账单确定缴费吗？',{btn:["确定","取消"]},
              //确定事件
              function () {
                  $.ajax({

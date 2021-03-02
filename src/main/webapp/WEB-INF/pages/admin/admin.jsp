@@ -72,10 +72,10 @@
             <a href="javascript:;" onclick="visitor_park()">
               <i class="layui-icon">&#xe602;</i>游客停车详情</a></dd>
           <dd>
-            <a href="javascript:;" onclick="park_cost()">
+            <a href="javascript:;" onclick="user_park_cost()">
               <i class="layui-icon">&#xe602;</i>业主停车账单详情</a></dd>
           <dd>
-             <a href="javascript:;" onclick="park_cost()">
+             <a href="javascript:;" onclick="visitor_park_cost()">
                <i class="layui-icon">&#xe602;</i>游客停车账单详情</a></dd>
           </dl>
         </li>
@@ -177,13 +177,14 @@
   }
 
 
-
-  function park_cost() {
-      $("#towhere").attr("src", '/user/toUserParkCost');
+//业主停车账单详情页面
+  function user_park_cost() {
+      $("#towhere").attr("src", '/admin/toAdminUserParkCost');
     }
 
-function property_cost() {
-     $("#towhere").attr("src", '/user/toUserPropertyCost');
+//游客停车账单详情页面
+function visitor_park_cost() {
+     $("#towhere").attr("src", '/admin/toAdminVisitorParkCost');
    }
 
 
