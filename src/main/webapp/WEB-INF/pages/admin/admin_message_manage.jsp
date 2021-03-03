@@ -41,6 +41,14 @@
 </div>
 
 
+<%--头部工具栏--%>
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="delete">删除选中帖子</button>
+  </div>
+</script>
+
+
 
 <table class="layui-hide" id="test" lay-filter="test" ></table>
 
@@ -60,11 +68,13 @@ layui.use(['jquery', 'table', 'layer', 'tree'], function(){
     elem: '#test'
     ,url:'/admin/admin_message_list' //数据接口
     ,method:'post'
+    ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
     ,page: true
     ,id: 'testReload'
     ,cols: [
         [ //表头
-       {field: 'message_id', title: '通告单号', sort: true}
+       {type: 'checkbox', fixed: 'left'} //选择框
+      ,{field: 'message_id', title: '通告单号', sort: true}
       ,{field: 'admin_name', title: '管理员名名称'}
       ,{field: 'user_name', title: '业主名称',sort:true}
       ,{field: 'topic', title: '主题',sort:true}
@@ -104,6 +114,51 @@ layui.use(['jquery', 'table', 'layer', 'tree'], function(){
                });
 
 
+
+
+
+    //头工具栏事件
+      table.on('toolbar(test)', function(obj){
+          var checkStatus = table.checkStatus(obj.config.id);//不要写'test',换成'obj.config.id'
+          var data = checkStatus.data; //当前选中的数据
+          //确定勾选数据
+          if(data.length > 0){
+              if(obj.event === 'delete'){
+               layer.confirm('想清楚了，确定删除选中的帖子吗？',{btn:["确定","取消"]},
+                   //确定事件
+                   function () {
+                      //删除数据
+                      var message_id = [];
+                      for(var i in data){
+                          message_id[i] = data[i].message_id;
+                       }
+                      $.ajax({
+                          url:"/admin/admin_delete_message",
+                          data:{message_id:message_id},
+                          method:'post',
+                          traditional:true,
+                          success:function (result) {
+                              if(result.status){
+                                table.reload('testReload',{});//重新加载数据,不再是'test',而是表格新id：testReload
+                              }else {
+                                  alert(result.message);
+                              }
+                              layer.closeAll('dialog'); //关闭信息框,可以关闭，有效
+                          }
+                      })
+                     }
+
+                 //取消时间
+               ,function () {
+                       layer.close(layer.index);
+                   }
+               )}
+          }
+
+
+
+
+        });
 
 
 

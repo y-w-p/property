@@ -1,9 +1,6 @@
 package com.ywp.services;
 
-import com.ywp.entity.Property;
-import com.ywp.entity.Repaired;
-import com.ywp.entity.User;
-import com.ywp.entity.User_park;
+import com.ywp.entity.*;
 
 import java.util.List;
 
@@ -99,5 +96,26 @@ public interface UserService {
     void user_delete_repaired(int[] repaired_ids);
 
 
+    /**
+     * 业主通告详情
+     * @param user_id
+     * @param topic
+     * @param content
+     * @return
+     */
+    List<Message> getUserMessageList(int user_id,String topic, String content);
 
+
+    /**
+     * 业主阅读通告
+     * @param message_id
+     */
+    void user_message_look(int message_id);
+
+
+    /**
+     * 业主删除通告
+     * @param message_id
+     */
+    void user_delete_message(int message_id);
 }

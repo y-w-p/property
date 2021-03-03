@@ -280,6 +280,91 @@ public class UserController {
       }
 
 
+
+
+    /**
+     * 业主通告详情
+     * @param page
+     * @param limit
+     * @param topic
+     * @param content
+     * @return
+     */
+   @ResponseBody
+   @RequestMapping(value = "/user_message_list")
+   public TableData user_message_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "topic",required = false,defaultValue = "") String topic,@RequestParam(value = "content",required = false,defaultValue = "")String content,HttpServletRequest request){
+      int user_id = (int) request.getSession().getAttribute("id");
+      PageHelper.startPage(page,limit);
+      List<Message> messageList = userService.getUserMessageList(user_id,topic,content);
+      PageInfo<Message> pageInfo = new PageInfo<>(messageList);
+      TableData tableData = new TableData();
+      tableData.setCode(0);
+      tableData.setMsg("成功");
+      tableData.setCount(pageInfo.getTotal());
+      tableData.setData(pageInfo.getList());
+      return tableData;
+  }
+
+
+
+
+  /**
+   * 业主阅读通告
+   * @param message_id
+   * @return
+   */
+  @ResponseBody
+  @RequestMapping("/user_message_look")
+  public ResultData user_message_look(@RequestParam(value="message_id",required = false) int message_id,@RequestParam(value="status",required = false)String status){
+      //已阅读，直接返回
+      if(status.equals("已阅读")){
+          ResultData resultData = new ResultData();
+          resultData.setMessage("成功");
+          resultData.setStatus(true);
+          return resultData;
+      }
+      //未阅读情况，更改状态
+      userService.user_message_look(message_id);
+      ResultData resultData = new ResultData();
+      resultData.setMessage("成功");
+      resultData.setStatus(true);
+      return resultData;
+  }
+
+
+    /**
+   * 业主删除通告
+   * @param message_id
+   * @return
+   */
+  @ResponseBody
+  @RequestMapping("/user_delete_message")
+  public ResultData user_delete_message(@RequestParam(value="message_id",required = false) int message_id,@RequestParam(value="status",required = false)String status){
+      //未阅读，不能删除
+      if(status.equals("未阅读")){
+          ResultData resultData = new ResultData();
+          resultData.setMessage("成功");
+          resultData.setStatus(true);
+          return resultData;
+      }
+      //已阅读才可以删除通告
+      userService.user_delete_message(message_id);
+      ResultData resultData = new ResultData();
+      resultData.setMessage("成功");
+      resultData.setStatus(true);
+      return resultData;
+  }
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 去业主个人信息页面
      * @return
@@ -296,7 +381,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/toUserParking")
-       public String toUserParking(){
+    public String toUserParking(){
            return "user/user_parking";
        }
 
@@ -307,7 +392,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/toUserParkCost")
-       public String toUserParkCost(){
+    public String toUserParkCost(){
            return "user/user_park_cost_list";
        }
 
@@ -316,7 +401,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/toUserPropertyCost")
-       public String toUserPropertyCost(){
+    public String toUserPropertyCost(){
         return "user/user_property_cost_list";
        }
 
@@ -327,7 +412,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/toUserRepairedList")
-       public String toUserRepairedList(){
+    public String toUserRepairedList(){
         return "user/user_repair_list";
        }
 
@@ -337,8 +422,21 @@ public class UserController {
      * @return
      */
     @RequestMapping("/toUserRepaired")
-       public String toUserRepaired(){
+    public String toUserRepaired(){
         return "user/user_repair";
+       }
+
+
+
+
+
+    /**
+     * 去业主消息通知页面
+     * @return
+     */
+    @RequestMapping("/toUserMessageList")
+    public String toUserMessageList(){
+        return "user/user_message_list";
        }
 
 }

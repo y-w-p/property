@@ -30,9 +30,9 @@
        <a href="javascript:;" onclick="welcome()">主页</a>
      </li>
       <li class="layui-nav-item">
-        <a href="javascript:;">通知</a>
+        <a href="javascript:;"><i class="layui-icon">&#xe609;</i>通知</a>
         <dl class="layui-nav-child">
-          <dd><a href="">消息管理</a></dd>
+          <dd><a href="/user/toUserMessageList" target="towhere">消息管理</a></dd>
         </dl>
       </li>
     </ul>

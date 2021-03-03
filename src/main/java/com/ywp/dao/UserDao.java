@@ -124,5 +124,24 @@ public interface UserDao {
     void user_delete_repaired(int[] repaired_ids);
 
 
+    /**
+     * 业主通告详情
+     * @param message
+     * @return
+     */
+    List<Message> getUserMessageList(Message message);
 
+
+    /**
+     * 业主阅读通告
+     * @param message_id
+     */
+    void user_message_look(@Param("message_id") int message_id);
+
+
+    /**
+     * 业主删除通告
+     * @param message_id
+     */
+    void user_delete_message(@Param("message_id")int message_id);
 }

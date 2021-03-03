@@ -236,6 +236,51 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    /**
+     * 业主通告详情
+     * @param user_id
+     * @param topic
+     * @param content
+     * @return
+     */
+    @Override
+    public List<Message> getUserMessageList(int user_id,String topic, String content) {
+        Message message = new Message();
+        message.setUser_id(user_id);
+        message.setTopic(topic);
+        message.setContent(content);
+        List<Message> userMessageList= userDao.getUserMessageList(message);
+        for(Message msg:userMessageList){
+            if(msg.getStatus().equals("0")){
+                msg.setStatus("未阅读");
+            }
+            if(msg.getStatus().equals("1")){
+                msg.setStatus("已阅读");
+            }
+        }
+
+        return userMessageList;
+    }
+
+
+    /**
+     * 业主阅读通告
+     * @param message_id
+     */
+    @Override
+    public void user_message_look(int message_id) {
+        userDao.user_message_look(message_id);
+    }
+
+
+    /**
+     * 业主删除通告
+     * @param message_id
+     */
+    @Override
+    public void user_delete_message(int message_id) {
+        userDao.user_delete_message(message_id);
+    }
 
 
 }
