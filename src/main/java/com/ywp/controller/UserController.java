@@ -108,10 +108,10 @@ public class UserController {
     */
    @ResponseBody
    @RequestMapping("/user_park_list")
-   public TableData user_park_list(@RequestParam("page")Integer page, @RequestParam("limit")Integer limit, HttpServletRequest request) throws Exception{
+   public TableData user_park_list(@RequestParam("page")Integer page, @RequestParam("limit")Integer limit,@RequestParam(value = "user_carnumber",required = false,defaultValue = "")String user_carnumber,@RequestParam(value = "park_location",required = false,defaultValue = "")String park_location, HttpServletRequest request) throws Exception{
        int user_id = (int)request.getSession().getAttribute("id");
        PageHelper.startPage(page,limit);
-       List<User_park> userParkList = userService.getUserPark(user_id);
+       List<User_park> userParkList = userService.getUserPark(user_id,user_carnumber,park_location);
        PageInfo<User_park> pageInfo = new PageInfo<>(userParkList);
 
        TableData tableData = new TableData();
@@ -131,10 +131,11 @@ public class UserController {
     */
    @ResponseBody
    @RequestMapping("/user_park_cost_list")
-   public TableData user_park_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit, HttpServletRequest request) throws Exception{
+   public TableData user_park_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "park_id",required = false,defaultValue = "")String park_id,@RequestParam(value = "user_carnumber",required = false,defaultValue = "")String user_carnumber, HttpServletRequest request) throws Exception{
        int user_id = (int)request.getSession().getAttribute("id");
-        PageHelper.startPage(page,limit);
-        List<User_park> userParkCostList = userService.getUserParkCost(user_id);
+       PageHelper.startPage(page,limit);
+
+       List<User_park> userParkCostList = userService.getUserParkCost(user_id,park_id,user_carnumber);
 
         PageInfo<User_park> pageInfo = new PageInfo<>(userParkCostList);
         TableData tableData = new TableData();
@@ -155,10 +156,10 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping("/user_property_cost_list")
-    public TableData user_property_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit, HttpServletRequest request){
+    public TableData user_property_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "year",required = false,defaultValue = "")String year,@RequestParam(value = "month",required = false,defaultValue = "")String month, HttpServletRequest request){
         int user_id = (int)request.getSession().getAttribute("id");
         PageHelper.startPage(page,limit);
-        List<Property> userPropertyCostList = userService.getUserPropertyCost(user_id);
+        List<Property> userPropertyCostList = userService.getUserPropertyCost(user_id,year,month);
         PageInfo<Property> pageInfo = new PageInfo<>(userPropertyCostList);
         TableData tableData = new TableData();
         tableData.setCode(0);
@@ -247,13 +248,13 @@ public class UserController {
         */
        @ResponseBody
        @RequestMapping("/user_repaired_list")
-       public TableData user_repaired_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit, HttpServletRequest request,HttpSession session){
+       public TableData user_repaired_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "topic",required = false,defaultValue = "") String topic,@RequestParam(value = "content",required = false,defaultValue = "")String content, HttpServletRequest request,HttpSession session){
            int user_id = (int)request.getSession().getAttribute("id");
            //上报成功后，不再提示上报成功信息
            session.removeAttribute("repaired_msg");
 
            PageHelper.startPage(page,limit);
-           List<Repaired> userRepairedList = userService.getUserRepairedList(user_id);
+           List<Repaired> userRepairedList = userService.getUserRepairedList(user_id,topic,content);
            PageInfo<Repaired> pageInfo = new PageInfo<>(userRepairedList);
            TableData tableData = new TableData();
            tableData.setCode(0);

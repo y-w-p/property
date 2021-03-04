@@ -37,18 +37,21 @@ public interface VisitorService {
     /**
      * 游客停车详情
      * @param visitor_id
+     * @param visitor_carnumber
+     * @param park_location
      * @return
      */
-    public List<Visitor_park> getVisitorPark(int visitor_id);
-
+    public List<Visitor_park> getVisitorPark(int visitor_id,String visitor_carnumber,String park_location);
 
 
     /**
      * 游客停车账单详情
      * @param visitor_id
+     * @param park_id
+     * @param visitor_carnumber
      * @return
      */
-    public List<Visitor_park> getVisitorParkCost(int visitor_id);
+    public List<Visitor_park> getVisitorParkCost(int visitor_id,String park_id,String visitor_carnumber);
 
 
 
@@ -92,7 +95,7 @@ public interface VisitorService {
      * @param people_name
      * @return
      */
-    public List<Article> findArticleByIDAndName(int people_id, String people_name);
+    public List<Article> findArticleByIDAndName(int people_id, String people_name,String topic,String content);
 
     /**
      * 根据帖子id，删帖子

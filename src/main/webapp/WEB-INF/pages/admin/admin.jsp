@@ -32,8 +32,8 @@
       <li class="layui-nav-item">
         <a href="javascript:;"><i class="layui-icon">&#xe609;</i>通告</a>
         <dl class="layui-nav-child">
-          <dd><a href="/admin/toAdminPublishMessage" target="towhere">发布公告</a></dd>
-            <dd><a href="/admin/toAdminPublishMessageList" target="towhere">公告详情</a></dd>
+          <dd><a href="/admin/toAdminPublishMessage" target="towhere">发布通告</a></dd>
+            <dd><a href="/admin/toAdminPublishMessageList" target="towhere">通告详情</a></dd>
         </dl>
       </li>
     </ul>

@@ -47,21 +47,26 @@ public interface UserService {
      * @param user_id
      * @return
      */
-    public List<User_park> getUserPark(int user_id);
+    public List<User_park> getUserPark(int user_id,String user_carnumber,String park_location);
+
 
     /**
      * 业主停车账单详情
      * @param user_id
+     * @param user_carnumber
      * @return
      */
-    List<User_park> getUserParkCost(int user_id);
+    List<User_park> getUserParkCost(int user_id,String park_id,String user_carnumber);
+
 
     /**
      * 业主物业账单详情
      * @param user_id
+     * @param year
+     * @param month
      * @return
      */
-    List<Property> getUserPropertyCost(int user_id);
+    List<Property> getUserPropertyCost(int user_id,String year,String month);
 
     /**
      * 业主缴纳物业费
@@ -87,7 +92,7 @@ public interface UserService {
      * 通过业主ID得到业主上报维修记录
      * @param user_id
      */
-    List<Repaired> getUserRepairedList(int user_id);
+    List<Repaired> getUserRepairedList(int user_id,String topic,String content);
 
     /**
      * 业主删除维修单

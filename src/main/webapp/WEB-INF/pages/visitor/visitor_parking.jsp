@@ -10,6 +10,20 @@
 </head>
 <body>
 
+
+<div class="demoTable" >
+      <label class="layui-form-label">查询停车:</label>
+      <div class="layui-inline" >
+          <input class="layui-input" name="visitor_carnumber" id="demoReload1" autocomplete="off" placeholder="请输入车牌号">
+      </div>
+      <div class="layui-inline" >
+          <input class="layui-input" name="park_location" id="demoReload2" autocomplete="off" placeholder="请输入相关车位">
+      </div>
+      <div class="layui-inline">
+          <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
+      </div>
+</div>
+
 <table class="layui-hide" id="test" lay-filter="test" ></table>
 
 <script src="../../../layui/layui.js"  charset="utf-8"></script>
@@ -22,6 +36,7 @@ layui.use('table', function(){
     elem: '#test'
     ,url:'/visitor/visitor_park_list' //数据接口
     ,method:'post'
+    ,id: 'testReload'
     ,page: true
     ,cols: [
         [ //表头
@@ -34,6 +49,34 @@ layui.use('table', function(){
         ]
       ]
   });
+
+
+    var $ = layui.$, active = {
+          reload: function () {
+              var visitor_carnumber = $('#demoReload1');
+              var park_location = $('#demoReload2');
+              //执行重载
+              table.reload('testReload', {
+                  page: {
+                      curr: 1 //重新从第 1 页开始
+                  }
+                  , where: {
+                      visitor_carnumber: visitor_carnumber.val(),
+                      park_location: park_location.val()
+                  }
+              }, 'data');
+          }
+      };
+
+              $('.demoTable .layui-btn').on('click', function () {
+                 var type = $(this).data('type');
+                 active[type] ? active[type].call(this) : '';
+             });
+
+
+
+
+
 
 });
 </script>

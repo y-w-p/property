@@ -30,7 +30,7 @@
        <a href="javascript:;" onclick="welcome()">主页</a>
      </li>
       <li class="layui-nav-item">
-        <a href="javascript:;"><i class="layui-icon">&#xe609;</i>通知</a>
+        <a href="javascript:;"><i class="layui-icon">&#xe609;</i>通告</a>
         <dl class="layui-nav-child">
           <dd><a href="/user/toUserMessageList" target="towhere">消息管理</a></dd>
         </dl>
@@ -86,11 +86,11 @@
            </a>
            <dl class="layui-nav-child">
              <dd>
+                <a href="javascript:;" onclick="repaired()">
+                  <i class="layui-icon">&#xe602;</i>上报维修</a></dd>
+             <dd>
                <a href="javascript:;" onclick="repaired_list()">
                  <i class="layui-icon">&#xe602;</i>维修详情</a></dd>
-               <dd>
-                 <a href="javascript:;" onclick="repaired()">
-                   <i class="layui-icon">&#xe602;</i>上报维修</a></dd>
            </dl>
          </li>
         <li class="layui-nav-item">

@@ -58,28 +58,86 @@ public class VisitorServiceImpl implements VisitorService {
         return false;
     }
 
-
     /**
      * 游客停车详情
      * @param visitor_id
+     * @param visitor_carnumber
+     * @param park_location
      * @return
      */
     @Override
-    public List<Visitor_park> getVisitorPark(int visitor_id) {
-        List<Visitor_park> visitor_park_list = visitorDao.findVisitorParkByID(visitor_id);
+    public List<Visitor_park> getVisitorPark(int visitor_id,String visitor_carnumber,String park_location) {
+        Visitor_park visitor_park = new Visitor_park();
+        visitor_park.setVisitor_id(visitor_id);
+        visitor_park.setVisitor_carnumber(visitor_carnumber);
+        visitor_park.setPark_location(park_location);
+        List<Visitor_park> visitor_park_list = visitorDao.findVisitorParkByID(visitor_park);
         return visitor_park_list;
     }
 
     /**
      * 游客停车账单详情
      * @param visitor_id
+     * @param park_id
+     * @param visitor_carnumber
      * @return
      */
     @Override
-    public List<Visitor_park> getVisitorParkCost(int visitor_id) {
-        List<Visitor_park> visitorParkCostList = visitorDao.findVisitorCostByID(visitor_id);
+    public List<Visitor_park> getVisitorParkCost(int visitor_id,String park_id,String visitor_carnumber) {
+        //搜索条件不包括停车单号
+        if(park_id.equals("")){
+            Visitor_park visitor_park1 = new Visitor_park();
+            visitor_park1.setVisitor_id(visitor_id);
+            visitor_park1.setVisitor_carnumber(visitor_carnumber);
+            List<Visitor_park> visitorParkCostList = visitorDao.findVisitorCostByID(visitor_park1);
+            //计算时长和金额
+            for(Visitor_park visitor_park:visitorParkCostList){
+                      if(visitor_park != null){
+                        //计算分钟
+                        int minute = (int) visitor_park.getPeriod();
+                        visitor_park.setPeriod(minute);
+                        //计算金额
+                        int time1 = minute/60;
+                        int time2 = minute%60;
+                        //不足一小时
+                        if(time1 == 0){
+                            visitor_park.setCost(5);
+                            //未缴费
+                            if(visitor_park.getStatus().equals("0")){
+                             //将计算出来的金额插入数据库中
+                               visitorDao.updateVisitorParkCost(visitor_park.getPark_id(),5);
+                            }
+
+                        }else {
+                            if(time2 > 0){
+                                //超过1小时，不足2小时，算2小时
+                                time1 = time1+1;
+                            }
+                            //5元/h
+                            visitor_park.setCost(time1*5);
+                            //未缴费
+                            if(visitor_park.getStatus().equals("0")){
+                             //将计算出来的金额插入数据库中
+                              visitorDao.updateVisitorParkCost(visitor_park.getPark_id(),time1*5);
+                            }
+                        }
+                        if(visitor_park.getStatus().equals("1")){
+                            visitor_park.setStatus("已缴费");
+                        }else {
+                            visitor_park.setStatus("未缴费");
+                        }
+                      }
+                  }
+            return visitorParkCostList;
+        }
+        //搜索条件包括停车单号
+        Visitor_park visitor_park1 = new Visitor_park();
+        visitor_park1.setVisitor_id(visitor_id);
+        visitor_park1.setPark_id(Integer.parseInt(park_id.trim()));//同上的区别，包括停车单号，表示停车单号存在
+        visitor_park1.setVisitor_carnumber(visitor_carnumber);
+        List<Visitor_park> visitorParkCostList = visitorDao.findVisitorCostByParkID(visitor_park1);
         //计算时长和金额
-               for(Visitor_park visitor_park:visitorParkCostList){
+        for(Visitor_park visitor_park:visitorParkCostList){
                    if(visitor_park != null){
                      //计算分钟
                      int minute = (int) visitor_park.getPeriod();
@@ -116,7 +174,7 @@ public class VisitorServiceImpl implements VisitorService {
                      }
                    }
                }
-               return visitorParkCostList;
+        return visitorParkCostList;
     }
 
 
@@ -179,11 +237,18 @@ public class VisitorServiceImpl implements VisitorService {
      * 通过游客id和name查找游客已发帖子
      * @param people_id
      * @param people_name
+     * @param topic
+     * @param content
      * @return
      */
     @Override
-    public List<Article> findArticleByIDAndName(int people_id, String people_name) {
-        return visitorDao.findArticleByIDAndName(people_id,people_name);
+    public List<Article> findArticleByIDAndName(int people_id, String people_name,String topic,String content) {
+        Article article = new Article();
+        article.setPeople_id(people_id);
+        article.setPeople_name(people_name);
+        article.setTopic(topic);
+        article.setContent(content);
+        return visitorDao.findArticleByIDAndName(article);
     }
 
     /**

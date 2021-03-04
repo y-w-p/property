@@ -49,14 +49,22 @@ public interface VisitorDao {
      * @param
      * @return
      */
-    public List<Visitor_park> findVisitorParkByID(@Param("visitor_id")int visitor_id);
+    public List<Visitor_park> findVisitorParkByID(Visitor_park visitor_park);
 
     /**
-     *  通过游客ID查找游客停车账单
-     * @param visitor_id
+     *  通过游客ID查找游客停车账单(搜索条件不包括停车单号)
+     * @param visitor_park
      * @return
      */
-    public List<Visitor_park> findVisitorCostByID(@Param("visitor_id")int visitor_id);
+    public List<Visitor_park> findVisitorCostByID(Visitor_park visitor_park);
+
+
+    /**
+     * 通过游客ID查找游客停车账单(搜索条件包括停车单号)
+     * @param visitor_park
+     * @return
+     */
+    List<Visitor_park> findVisitorCostByParkID(Visitor_park visitor_park);
 
 
     /**
@@ -107,17 +115,17 @@ public interface VisitorDao {
 
     /**
      * 通过游客id和name查找游客已发帖子
-     * @param people_id
-     * @param people_name
+     * @param article
      * @return
      */
-    public List<Article> findArticleByIDAndName(@Param("people_id") int people_id,@Param("people_name") String people_name);
+    public List<Article> findArticleByIDAndName(Article article);
 
     /**
      * 根据帖子Id，删除帖子
      * @param article_ids
      */
     void visitor_delete_article(int[] article_ids);
+
 
 
 }

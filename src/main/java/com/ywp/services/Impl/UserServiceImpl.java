@@ -94,8 +94,12 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public List<User_park> getUserPark(int user_id) {
-        List<User_park> user_park_list = userDao.findUserParkByID(user_id);
+    public List<User_park> getUserPark(int user_id,String user_carnumber,String park_location) {
+        User_park user_park = new User_park();
+        user_park.setUser_id(user_id);
+        user_park.setUser_carnumber(user_carnumber);
+        user_park.setPark_location(park_location);
+        List<User_park> user_park_list = userDao.findUserParkByID(user_park);
         return user_park_list;
     }
 
@@ -103,11 +107,63 @@ public class UserServiceImpl implements UserService {
     /**
      * 业主停车账单详情
      * @param user_id
+     * @param user_carnumber
      * @return
      */
     @Override
-    public List<User_park> getUserParkCost(int user_id) {
-        List<User_park> userParkCostList = userDao.findUserParkCostByID(user_id);
+    public List<User_park> getUserParkCost(int user_id,String park_id,String user_carnumber) {
+        //不输入停车单
+        if(park_id.equals("")){
+            User_park user_park1 = new User_park();
+            user_park1.setUser_id(user_id);
+            user_park1.setUser_carnumber(user_carnumber);
+            List<User_park> userParkCostList = userDao.findUserParkCostByID(user_park1);
+            //计算时长和金额
+           for(User_park user_park:userParkCostList){
+               if(user_park != null){
+                   //计算分钟
+                   long minute = user_park.getPeriod();
+                   user_park.setPeriod(minute);
+                   //计算金额
+                   int time1 = (int)(minute /(60*24));
+                   int time2 = (int)(minute /(60*24));
+                   //不足一小时
+                   if(time1 == 0){
+                       user_park.setCost(5);
+                       //未缴费
+                       if(user_park.getStatus().equals("0")){
+                           //将计算出来的金额插入数据库中
+                           userDao.updateUserParkCost(user_park.getPark_id(),5);
+                       }
+
+                   }else {
+                       if(time2>0){
+                           //超过半天，不足一天，算一天
+                           time1 = time1+1;
+                       }
+                       //2元/12h
+                       user_park.setCost(time1*5);
+                       //未缴费
+                       if(user_park.getStatus().equals("0")){
+                           //将计算出来的金额插入数据库中
+                           userDao.updateUserParkCost(user_park.getPark_id(),5);
+                       }
+                   }
+                 if(user_park.getStatus().equals("1")){
+                     user_park.setStatus("已缴费");
+                 }else {
+                     user_park.setStatus("未缴费");
+                 }
+               }
+           }
+           return userParkCostList;
+        }
+        //输入停车单
+        User_park user_park1 = new User_park();
+        user_park1.setUser_id(user_id);
+        user_park1.setPark_id(Integer.parseInt(park_id.trim()));
+        user_park1.setUser_carnumber(user_carnumber);
+        List<User_park> userParkCostList = userDao.findUserParkCostByParkID(user_park1);
         //计算时长和金额
        for(User_park user_park:userParkCostList){
            if(user_park != null){
@@ -146,6 +202,7 @@ public class UserServiceImpl implements UserService {
              }
            }
        }
+
         return userParkCostList;
     }
 
@@ -155,8 +212,12 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public List<Property> getUserPropertyCost(int user_id) {
-        List<Property> userPropertyCostList = userDao.findUserPropertyCostByID(user_id);
+    public List<Property> getUserPropertyCost(int user_id,String year,String month) {
+        Property property1 = new Property();
+        property1.setUser_id(user_id);
+        property1.setYear(year);
+        property1.setMonth(month);
+        List<Property> userPropertyCostList = userDao.findUserPropertyCostByID(property1);
         for (Property property:userPropertyCostList){
            //缴费状态
            if(property.getStatus().equals("1")){
@@ -206,8 +267,12 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public List<Repaired> getUserRepairedList(int user_id) {
-        List<Repaired> userRepairedList = userDao.findUserRepairedByID(user_id);
+    public List<Repaired> getUserRepairedList(int user_id,String topic,String content) {
+        Repaired repaired1 = new Repaired();
+        repaired1.setUser_id(user_id);
+        repaired1.setTopic(topic);
+        repaired1.setContent(content);
+        List<Repaired> userRepairedList = userDao.findUserRepairedByID(repaired1);
         for(Repaired repaired:userRepairedList){
             if(repaired.getStatus().equals("0")){
                 repaired.setStatus("未审核");

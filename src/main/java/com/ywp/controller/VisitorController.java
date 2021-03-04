@@ -93,10 +93,10 @@ public class VisitorController {
      */
     @ResponseBody
     @RequestMapping("/visitor_park_list")
-    public TableData visitor_park_list(@RequestParam("page")Integer page,  @RequestParam("limit")Integer limit,HttpServletRequest request) throws Exception{
+    public TableData visitor_park_list(@RequestParam("page")Integer page,  @RequestParam("limit")Integer limit,@RequestParam(value = "visitor_carnumber",required = false,defaultValue = "")String visitor_carnumber,@RequestParam(value = "park_location",required = false,defaultValue = "")String park_location,HttpServletRequest request) throws Exception{
         int visitor_id = (int)request.getSession().getAttribute("id");
         PageHelper.startPage(page,limit);
-        List<Visitor_park> visitorParkList = visitorService.getVisitorPark(visitor_id);
+        List<Visitor_park> visitorParkList = visitorService.getVisitorPark(visitor_id,visitor_carnumber,park_location);
         PageInfo<Visitor_park> pageInfo = new PageInfo<>(visitorParkList);
 
         TableData tableData = new TableData();
@@ -118,10 +118,10 @@ public class VisitorController {
      */
     @ResponseBody
     @RequestMapping("/visitor_park_cost_list")
-    public TableData visitor_park_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1") Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10") Integer limit, HttpServletRequest request) throws Exception{
+    public TableData visitor_park_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1") Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10") Integer limit,@RequestParam(value = "park_id",required = false,defaultValue = "")String park_id,@RequestParam(value = "visitor_carnumber",required = false,defaultValue = "")String visitor_carnumber, HttpServletRequest request) throws Exception{
         int visitor_id = (int)request.getSession().getAttribute("id");
         PageHelper.startPage(page,limit);
-        List<Visitor_park> visitorParkCostList = visitorService.getVisitorParkCost(visitor_id);
+        List<Visitor_park> visitorParkCostList = visitorService.getVisitorParkCost(visitor_id,park_id,visitor_carnumber);
         PageInfo<Visitor_park> pageInfo = new PageInfo<>(visitorParkCostList);
         TableData tableData = new TableData();
         tableData.setCode(0);
@@ -194,12 +194,12 @@ public class VisitorController {
      */
     @ResponseBody
     @RequestMapping("/visitor_article_list")
-    public TableData visitor_article_list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,HttpServletRequest request){
+    public TableData visitor_article_list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,@RequestParam(value = "topic",required = false,defaultValue = "") String topic,@RequestParam(value = "content",required = false,defaultValue = "")String content,HttpServletRequest request){
        int people_id = (int) request.getSession().getAttribute("id");
        String people_name = (String) request.getSession().getAttribute("name");
 
        PageHelper.startPage(page,limit);
-       List<Article> articleList = visitorService.findArticleByIDAndName(people_id, people_name);
+       List<Article> articleList = visitorService.findArticleByIDAndName(people_id, people_name,topic,content);
        PageInfo<Article> pageInfo = new PageInfo<>(articleList);
 
        TableData tableData = new TableData();

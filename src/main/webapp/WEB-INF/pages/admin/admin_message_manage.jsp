@@ -148,8 +148,8 @@ layui.use(['jquery', 'table', 'layer', 'tree'], function(){
                       })
                      }
 
-                 //取消时间
-               ,function () {
+                    //取消事件
+                    ,function () {
                        layer.close(layer.index);
                    }
                )}

@@ -24,6 +24,24 @@
 </head>
 <body>
 
+
+
+<div class="demoTable" >
+    <label class="layui-form-label">查询物业单:</label>
+    <div class="layui-inline" >
+        <input class="layui-input" name="year" id="demoReload1" autocomplete="off" placeholder="请输入年份">
+    </div>
+    <div class="layui-inline" >
+        <input class="layui-input" name="month" id="demoReload2" autocomplete="off" placeholder="请输入月份">
+    </div>
+    <div class="layui-inline">
+    <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
+    </div>
+</div>
+
+
+
+
 <table class="layui-hide" id="test" lay-filter="test" ></table>
 
 <%--头部工具栏--%>
@@ -43,6 +61,7 @@ layui.use(['table','jquery','layer'], function(){
     elem: '#test'
     ,url:'/user/user_property_cost_list' //数据接口
     ,method:'post'
+    ,id: 'testReload'
     ,page: true
     ,cols: [
         [ //表头
@@ -60,6 +79,37 @@ layui.use(['table','jquery','layer'], function(){
   });
 
 
+
+    var $ = layui.$, active = {
+         reload: function () {
+             var year = $('#demoReload1');
+             var month = $('#demoReload2');
+             //执行重载
+             table.reload('testReload', {
+                 page: {
+                     curr: 1 //重新从第 1 页开始
+                 }
+                 , where: {
+                     year: year.val(),
+                     month: month.val()
+                 }
+             }, 'data');
+         }
+     };
+         $('.demoTable .layui-btn').on('click', function () {
+             var type = $(this).data('type');
+             active[type] ? active[type].call(this) : '';
+         });
+
+
+
+
+
+
+
+
+
+
     //监听行工具事件
     table.on('tool(test)', function(obj){
         var checkStatus =obj.data;
@@ -75,7 +125,7 @@ layui.use(['table','jquery','layer'], function(){
                   traditional:true,
                   success:function (result) {
                       if(result.status){
-                        table.reload('test',{});//重新加载数据
+                        table.reload('testReload',{});//重新加载数据
                       }else {
                           alert(result.message);
                       }

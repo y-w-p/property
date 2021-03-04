@@ -17,6 +17,22 @@
 </head>
 <body>
 
+
+<div class="demoTable" >
+    <label class="layui-form-label">查询停车单:</label>
+    <div class="layui-inline" >
+        <input class="layui-input" name="park_id" id="demoReload1" autocomplete="off" placeholder="请输入停车单号">
+    </div>
+    <div class="layui-inline" >
+        <input class="layui-input" name="visitor_carnumber" id="demoReload2" autocomplete="off" placeholder="请输入车牌号">
+    </div>
+    <div class="layui-inline">
+    <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
+    </div>
+</div>
+
+
+
 <table class="layui-hide" id="test" lay-filter="test" ></table>
 
 <%--头部工具栏--%>
@@ -36,6 +52,7 @@ layui.use(['table','jquery','layer'], function(){
     elem: '#test'
     ,url:'/visitor/visitor_park_cost_list' //数据接口
     ,method:'post'
+    ,id: 'testReload'
     ,page: true
     ,cols: [
         [ //表头
@@ -55,12 +72,40 @@ layui.use(['table','jquery','layer'], function(){
 
 
 
+
+
+    var $ = layui.$, active = {
+          reload: function () {
+              var park_id = $('#demoReload1');
+              var visitor_carnumber = $('#demoReload2');
+              //执行重载
+              table.reload('testReload', {
+                  page: {
+                      curr: 1 //重新从第 1 页开始
+                  }
+                  , where: {
+                      park_id:park_id.val(),
+                      visitor_carnumber: visitor_carnumber.val()
+                  }
+              }, 'data');
+          }
+      };
+          $('.demoTable .layui-btn').on('click', function () {
+              var type = $(this).data('type');
+              active[type] ? active[type].call(this) : '';
+          });
+
+
+
+
+
+
     //监听行工具事件
      table.on('tool(test)', function(obj){
          var checkStatus =obj.data;
          var park_id = checkStatus.park_id;
          if(obj.event === 'park_cost'){
-             layer.confirm('停车单号为'+park_id+'的账单确定缴费吗？',{btn:["确定","取消"]},
+             layer.confirm('停车单号为"'+park_id+'"的账单确定缴费吗？',{btn:["确定","取消"]},
              //确定事件
              function () {
                  $.ajax({
@@ -70,7 +115,7 @@ layui.use(['table','jquery','layer'], function(){
                    traditional:true,
                    success:function (result) {
                        if(result.status){
-                         table.reload('test',{});//重新加载数据
+                         table.reload('testReload',{});//重新加载数据
                        }else {
                            alert(result.message);
                        }
