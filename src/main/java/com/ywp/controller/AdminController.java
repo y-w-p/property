@@ -61,9 +61,9 @@ public class AdminController {
     */
    @ResponseBody
    @RequestMapping("/admin_article_list")
-   public TableData admin_article_list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit){
+   public TableData admin_article_list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,@RequestParam(value = "topic",required = false,defaultValue = "") String topic,@RequestParam(value = "content",required = false,defaultValue = "")String content){
       PageHelper.startPage(page,limit);
-      List<Article> articleList = adminService.findArticleAll();
+      List<Article> articleList = adminService.findArticleAll(topic,content);
       PageInfo<Article> pageInfo = new PageInfo<>(articleList);
 
       TableData tableData = new TableData();
@@ -91,16 +91,21 @@ public class AdminController {
    }
 
 
-
     /**
      * 查找所有维修上报记录
+     * @param page
+     * @param limit
+     * @param topic
+     * @param content
+     * @param location
+     * @return
      */
     @ResponseBody
     @RequestMapping("/admin_repaired_list")
-    public TableData admin_repaired_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit){
+    public TableData admin_repaired_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "topic",required = false,defaultValue = "") String topic,@RequestParam(value = "content",required = false,defaultValue = "")String content,@RequestParam(value = "location",required = false,defaultValue = "")String location){
 
       PageHelper.startPage(page,limit);
-      List<Repaired> AllRepairedList = adminService.findRepairedAll();
+      List<Repaired> AllRepairedList = adminService.findRepairedAll(topic,content,location);
       PageInfo<Repaired> pageInfo = new PageInfo<>(AllRepairedList);
       TableData tableData = new TableData();
       tableData.setCode(0);

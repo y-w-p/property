@@ -17,6 +17,24 @@
 </head>
 <body>
 
+<div class="demoTable" >
+      <label class="layui-form-label">查询维修:</label>
+      <div class="layui-inline" >
+          <input class="layui-input" name="topic" id="demoReload" autocomplete="off" placeholder="请输入概述">
+      </div>
+      <div class="layui-inline" >
+          <input class="layui-input" name="content" id="demoReload1" autocomplete="off" placeholder="请输入相关内容">
+      </div>
+      <div class="layui-inline" >
+          <input class="layui-input" name="location" id="demoReload2" autocomplete="off" placeholder="请输入楼栋号">
+      </div>
+      <div class="layui-inline">
+          <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
+      </div>
+</div>
+
+
+
 
 <table class="layui-hide" id="test" lay-filter="test" style="overflow:scroll;"></table>
 
@@ -45,6 +63,7 @@ layui.use(['table','jquery','layer'], function(){
     ,url:'/admin/admin_repaired_list' //数据接口
     ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
     ,method:'post'
+    ,id: 'testReload'
     ,page: true
     ,cols: [
         [ //表头
@@ -70,42 +89,74 @@ layui.use(['table','jquery','layer'], function(){
 
 
 
+    var $ = layui.$, active = {
+        reload: function () {
+            var topic = $('#demoReload');
+            var content = $('#demoReload1');
+            var location = $('#demoReload2');
+            //执行重载
+            table.reload('testReload', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    topic: topic.val(),
+                    content: content.val(),
+                    location:location.val()
+                }
+            }, 'data');
+        }
+    };
+
+            $('.demoTable .layui-btn').on('click', function () {
+               var type = $(this).data('type');
+               active[type] ? active[type].call(this) : '';
+           });
+
+
+
+
+
+
+
+
     //头工具栏事件
       table.on('toolbar(test)', function(obj){
-        var checkStatus = table.checkStatus("test");
-        switch(obj.event){
-          case 'delete':
-            var data = checkStatus.data; //当前选中的数据
-            if(data.length > 0){
-                layer.confirm('想清楚了，确定删除选中的维修单吗？',{btn:["确定","取消"]},
-                    function () {
-                       //删除数据
-                       var repaired_id = [];
-                        for(var i in data){
-                            repaired_id[i] = data[i].repaired_id;
-                        }
-                       $.ajax({
-                           url:"/admin/admin_delete_repaired",
-                           data:{repaired_id:repaired_id},
-                           method:'post',
-                           traditional:true,
-                           success:function (result) {
-                               if(result.status){
-                                 table.reload('test',{});//重新加载数据
-                               }else {
-                                   alert(result.message);
-                               }
-                               layer.closeAll('dialog'); //关闭信息框,可以关闭，有效
-                           }
-                       })
+        var checkStatus = table.checkStatus(obj.config.id);
+        var data = checkStatus.data; //当前选中的数据
+        if(data.length > 0){
+          if(obj.event === 'delete'){
+             layer.confirm('想清楚了，确定删除选中的维修单吗？',{btn:["确定","取消"]},
+                  //删除数据
+                  function () {
+                     var repaired_id = [];
+                      for(var i in data){
+                          repaired_id[i] = data[i].repaired_id;
                       }
-                ,function () {
-                        layer.close(layer.index);
+                     $.ajax({
+                         url:"/admin/admin_delete_repaired",
+                         data:{repaired_id:repaired_id},
+                         method:'post',
+                         traditional:true,
+                         success:function (result) {
+                             if(result.status){
+                               table.reload('testReload',{});//重新加载数据
+                             }else {
+                                 alert(result.message);
+                             }
+                             layer.closeAll('dialog'); //关闭信息框,可以关闭，有效
+                         }
+                     })
                     }
-                )
-            }
-            break;
-        };
+                    //取消删除
+                  ,function () {
+                      layer.close(layer.index);
+                  }
+              )
+          }
+      }
+
+
       });
 
 
@@ -127,7 +178,7 @@ layui.use(['table','jquery','layer'], function(){
                      traditional:true,
                      success:function (result) {
                          if(result.status){
-                           table.reload('test',{});//重新加载数据
+                           table.reload('testReload',{});//重新加载数据
                          }else {
                              alert(result.message);
                          }
@@ -161,7 +212,7 @@ layui.use(['table','jquery','layer'], function(){
                         traditional:true,
                         success:function (result) {
                             if(result.status){
-                              table.reload('test',{});//重新加载数据
+                              table.reload('testReload',{});//重新加载数据
                             }else {
                                 alert(result.message);
                             }
@@ -197,7 +248,7 @@ layui.use(['table','jquery','layer'], function(){
                     traditional:true,
                     success:function (result) {
                         if(result.status){
-                          table.reload('test',{});//重新加载数据
+                          table.reload('testReload',{});//重新加载数据
                         }else {
                             alert(result.message);
                         }

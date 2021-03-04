@@ -56,8 +56,11 @@ public class AdminServiceImpl implements AdminService {
      * @return
      */
     @Override
-    public List<Article> findArticleAll() {
-        return adminDao.findArticleAll();
+    public List<Article> findArticleAll(String topic,String content) {
+        Article article = new Article();
+        article.setTopic(topic);
+        article.setContent(content);
+        return adminDao.findArticleAll(article);
     }
 
 
@@ -73,11 +76,18 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 查找所有维修上报记录
+     * @param topic
+     * @param content
+     * @param location
      * @return
      */
     @Override
-    public List<Repaired> findRepairedAll() {
-        List<Repaired> repairedAll = adminDao.findRepairedAll();
+    public List<Repaired> findRepairedAll(String topic,String content,String location) {
+        Repaired repaired1 = new Repaired();
+        repaired1.setTopic(topic);
+        repaired1.setContent(content);
+        repaired1.setLocation(location);
+        List<Repaired> repairedAll = adminDao.findRepairedAll(repaired1);
 
         for(Repaired repaired:repairedAll){
            if(repaired.getStatus().equals("0")){

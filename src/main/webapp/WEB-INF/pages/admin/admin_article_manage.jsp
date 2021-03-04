@@ -17,6 +17,21 @@
 </head>
 <body>
 
+<div class="demoTable" >
+      <label class="layui-form-label">查询帖子:</label>
+      <div class="layui-inline" >
+          <input class="layui-input" name="topic" id="demoReload1" autocomplete="off" placeholder="请输入概述">
+      </div>
+      <div class="layui-inline" >
+          <input class="layui-input" name="content" id="demoReload2" autocomplete="off" placeholder="请输入相关内容">
+      </div>
+      <div class="layui-inline">
+          <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
+      </div>
+</div>
+
+
+
 <table class="layui-hide" id="test" lay-filter="test" ></table>
 
 <%--头部工具栏--%>
@@ -38,6 +53,7 @@ layui.use(['table','jquery','layer'], function(){
     ,url:'/admin/admin_article_list' //数据接口
     ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
     ,method:'post'
+    ,id: 'testReload'
     ,page: true
     ,cols: [
         [ //表头
@@ -52,43 +68,77 @@ layui.use(['table','jquery','layer'], function(){
   });
 
 
+
+    var $ = layui.$, active = {
+       reload: function () {
+           var topic = $('#demoReload1');
+           var content = $('#demoReload2');
+           //执行重载
+           table.reload('testReload', {
+               page: {
+                   curr: 1 //重新从第 1 页开始
+               }
+               , where: {
+                   topic: topic.val(),
+                   content: content.val()
+               }
+           }, 'data');
+       }
+   };
+
+           $('.demoTable .layui-btn').on('click', function () {
+              var type = $(this).data('type');
+              active[type] ? active[type].call(this) : '';
+          });
+
+
+
+
+
+
     //头工具栏事件
-      table.on('toolbar(test)', function(obj){
-        var checkStatus = table.checkStatus("test");
-        switch(obj.event){
-          case 'delete':
+    table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
             var data = checkStatus.data; //当前选中的数据
-            if(data.length > 0){
-                layer.confirm('想清楚了，确定删除选中的帖子吗？',{btn:["确定","取消"]},
-                    function () {
-                       //删除数据
-                       var article_id = [];
-                        for(var i in data){
-                            article_id[i] = data[i].article_id;
-                        }
-                       $.ajax({
-                           url:"/admin/admin_delete_article",
-                           data:{article_id:article_id},
-                           method:'post',
-                           traditional:true,
-                           success:function (result) {
-                               if(result.status){
-                                 table.reload('test',{});//重新加载数据
-                               }else {
-                                   alert(result.message);
-                               }
-                               layer.closeAll('dialog'); //关闭信息框,可以关闭，有效
-                           }
-                       })
-                      }
-                ,function () {
-                        layer.close(layer.index);
-                    }
-                )
-            }
-            break;
-        };
-      });
+              if(data.length > 0){
+                  if(obj.event === 'delete'){
+                      layer.confirm('想清楚了，确定要删除选中的帖子吗？',{btn:["确定","取消"]},
+                            //确定事件
+                            function () {
+                               //删除数据
+                               var article_id = [];
+                                for(var i in data){
+                                    article_id[i] = data[i].article_id;
+                                }
+                               $.ajax({
+                                   url:"/admin/admin_delete_article",
+                                   data:{article_id:article_id},
+                                   method:'post',
+                                   traditional:true,
+                                   success:function (result) {
+                                       if(result.status){
+                                         table.reload('testReload',{});//重新加载数据
+                                       }else {
+                                           alert(result.message);
+                                       }
+                                       layer.closeAll('dialog'); //关闭信息框,可以关闭，有效
+                                   }
+                               })
+                              }
+
+                              //取消事件
+                            ,function () {
+                                layer.close(layer.index);
+                            }
+                        )
+                  }
+              }
+
+
+
+
+
+          });
 
 
 

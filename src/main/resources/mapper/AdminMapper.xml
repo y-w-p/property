@@ -37,8 +37,14 @@
 
     <!--小区贴吧-->
     <!--查找所有已发帖子-->
-    <select id="findArticleAll" resultType="com.ywp.entity.Article">
-        select * from article
+    <select id="findArticleAll" parameterType="com.ywp.entity.Article" resultType="com.ywp.entity.Article">
+        select * from article where 1 = 1
+        <if test="topic!=null and topic != ''">
+             and topic like "%"#{topic}"%"
+        </if>
+        <if test="content!=null and content != ''">
+             and content like "%"#{content}"%"
+        </if>
     </select>
 
 
@@ -72,8 +78,17 @@
 
     <!--维修管理-->
     <!--查找所有上报维修-->
-       <select id="findRepairedAll" resultType="com.ywp.entity.Repaired">
+       <select id="findRepairedAll" parameterType="com.ywp.entity.Repaired" resultType="com.ywp.entity.Repaired">
            select repaired_id,user_name,topic,content,location,picture_path,publish_time,status from repaired r,user u WHERE r.user_id=u.user_id
+               <if test="topic!=null and topic != ''">
+                    and topic like "%"#{topic}"%"
+               </if>
+               <if test="content!=null and content != ''">
+                    and content like "%"#{content}"%"
+               </if>
+               <if test="location!=null and location != ''">
+                   and location like "%"#{location}"%"
+               </if>
        </select>
 
     <!--根据维修ID删除上报维修-->

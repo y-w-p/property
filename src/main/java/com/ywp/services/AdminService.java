@@ -30,7 +30,7 @@ public interface AdminService {
      * 查找所有已发帖子
      * @return
      */
-    List<Article> findArticleAll();
+    List<Article> findArticleAll(String topic,String content);
 
     /**
      * 根据ID删除帖子
@@ -43,7 +43,7 @@ public interface AdminService {
      * 查找所有维修上报记录
      * @return
      */
-    List<Repaired> findRepairedAll();
+    List<Repaired> findRepairedAll(String topic,String content,String location);
 
 
     /**

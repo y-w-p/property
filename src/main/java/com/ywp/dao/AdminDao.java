@@ -47,7 +47,7 @@ public interface AdminDao {
      * 查找所有已发帖子
      * @return
      */
-    List<Article> findArticleAll();
+    List<Article> findArticleAll(Article article);
 
 
     /**
@@ -61,7 +61,7 @@ public interface AdminDao {
      * 查找所有上报维修记录
      * @return
      */
-    List<Repaired> findRepairedAll();
+    List<Repaired> findRepairedAll(Repaired repaired);
 
 
     /**
