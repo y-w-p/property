@@ -107,9 +107,10 @@ public interface AdminDao {
 
     /**
      * 所有物业账单详情
+     * @param property
      * @return
      */
-    List<Property> getAllPropertyCost(@Param("user_name") String user_name,@Param("year")String year,@Param("month")String month);
+    List<Property> getAllPropertyCost(Property property);
 
 
     /**

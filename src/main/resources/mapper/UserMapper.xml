@@ -106,8 +106,8 @@
     <!--物业管理-->
     <!--通过业主id，查找业主物业账单-->
     <select id="findUserPropertyCostByID" parameterType="com.ywp.entity.Property" resultType="com.ywp.entity.Property">
-      SELECT property_id,admin_name,user_name,user_area,year,month,money,publish_time,status from property p, user u
-      where p.user_id = #{user_id} and u.user_id=#{user_id}
+      SELECT property_id,admin_name,user_name,user_area,year,month,money,publish_time,status from property p, user u,admin a
+      where p.user_id = #{user_id} and u.user_id=#{user_id} and a.admin_id = p.admin_id
         <if test="year!=null and year != ''">
              and year like "%"#{year}"%"
          </if>

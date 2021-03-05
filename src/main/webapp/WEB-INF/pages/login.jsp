@@ -50,6 +50,40 @@
         </form>
     </div>
 
+
+
+
+
+
+<%
+    //登录提示
+   String login_msg = (String) request.getSession().getAttribute("login_msg");
+   if(login_msg != null){
+
+%>
+<script type="text/javascript">
+   alert("<%=login_msg%>");
+</script>
+
+<% }%>
+
+
+
+<%
+//注册提示
+  String registered_msg = (String) request.getSession().getAttribute("registered_msg");
+  if(registered_msg != null){
+
+%>
+<script type="text/javascript">
+  alert("<%=registered_msg%>");
+</script>
+
+<% }%>
+
+
+
+
 </body>
 </html>
 

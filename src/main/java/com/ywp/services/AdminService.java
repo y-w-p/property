@@ -75,19 +75,24 @@ public interface AdminService {
 
     /**
      * 管理员发布物业费用
+     * @param admin_id
      * @param year
      * @param month
      * @param price
      * @return
      */
-    boolean admin_property_publish(String admin_name,String year, String month, float price);
+    boolean admin_property_publish(int admin_id,String year, String month, float price);
 
 
     /**
      * 所有物业账单详情
+     * @param admin_id
+     * @param user_name
+     * @param year
+     * @param month
      * @return
      */
-    List<Property> getAllPropertyCost(String user_name,String year,String month);
+    List<Property> getAllPropertyCost(int admin_id,String user_name,String year,String month);
 
 
     /**

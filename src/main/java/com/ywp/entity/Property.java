@@ -11,15 +11,17 @@ import java.util.Date;
  */
 public class Property implements Serializable {
     private int property_id;
+    private int admin_id;
     private String admin_name;
     private int user_id;
+    private String user_name;
+    private BigDecimal user_area;
     private String year;
     private String month;
     private String money;
     private String status;
 
-    private String user_name;
-    private BigDecimal user_area;
+
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date publish_time;
@@ -31,6 +33,14 @@ public class Property implements Serializable {
 
     public void setProperty_id(int property_id) {
         this.property_id = property_id;
+    }
+
+    public int getAdmin_id() {
+        return admin_id;
+    }
+
+    public void setAdmin_id(int admin_id) {
+        this.admin_id = admin_id;
     }
 
     public String getAdmin_name() {
@@ -47,6 +57,22 @@ public class Property implements Serializable {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public BigDecimal getUser_area() {
+        return user_area;
+    }
+
+    public void setUser_area(BigDecimal user_area) {
+        this.user_area = user_area;
     }
 
     public String getYear() {
@@ -81,22 +107,6 @@ public class Property implements Serializable {
         this.status = status;
     }
 
-    public String getUser_name() {
-        return user_name;
-    }
-
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
-    }
-
-    public BigDecimal getUser_area() {
-        return user_area;
-    }
-
-    public void setUser_area(BigDecimal user_area) {
-        this.user_area = user_area;
-    }
-
     public Date getPublish_time() {
         return publish_time;
     }
@@ -110,14 +120,15 @@ public class Property implements Serializable {
     public String toString() {
         return "Property{" +
                 "property_id=" + property_id +
+                ", admin_id=" + admin_id +
                 ", admin_name='" + admin_name + '\'' +
                 ", user_id=" + user_id +
+                ", user_name='" + user_name + '\'' +
+                ", user_area=" + user_area +
                 ", year='" + year + '\'' +
                 ", month='" + month + '\'' +
                 ", money='" + money + '\'' +
                 ", status='" + status + '\'' +
-                ", user_name='" + user_name + '\'' +
-                ", user_area=" + user_area +
                 ", publish_time=" + publish_time +
                 '}';
     }

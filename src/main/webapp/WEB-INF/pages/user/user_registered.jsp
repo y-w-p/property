@@ -242,6 +242,24 @@
         </form>
     </div>
 
+
+
+
+
+
+
+<%
+//注册提示
+ String registered_msg = (String) request.getSession().getAttribute("registered_msg");
+ if(registered_msg != null){
+
+%>
+<script type="text/javascript">
+ alert("<%=registered_msg%>");
+</script>
+
+<% }%>
+
 </body>
 </html>
 

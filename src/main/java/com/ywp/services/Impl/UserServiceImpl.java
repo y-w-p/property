@@ -7,6 +7,7 @@ import com.ywp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
                return true;
            }
        }
+
         return false;
     }
 

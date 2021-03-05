@@ -51,11 +51,15 @@ public class UserController {
     @RequestMapping("/user_registered")
     public String user_registered(String user_name, String user_password, String user_idcard,
                                   String user_phonenumber, String user_address,
-                                  String user_area, String user_carnumber){
+                                  String user_area, String user_carnumber,HttpSession session){
         boolean flag = userService.userRegistered(user_name, user_password, user_idcard, user_phonenumber, user_address, user_area, user_carnumber);
         if(flag){
+            //注册成功提示
+            session.setAttribute("registered_msg","注册成功，请登录");
             return "login";
         }
+        //注册失败提示
+        session.setAttribute("registered_msg","注册失败，请按要求重新注册");
         return "user/user_registered";
     }
 

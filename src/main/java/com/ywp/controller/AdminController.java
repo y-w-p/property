@@ -192,10 +192,10 @@ public class AdminController {
      */
     @RequestMapping("/admin_property_publish")
     public String admin_property_publish(String year, String month,float price,HttpServletRequest request,HttpSession session){
-        String admin_name = (String) request.getSession().getAttribute("name");
+         int admin_id = (int) request.getSession().getAttribute("id");
         //输入了数据
        if(!year.equals("") && !month.equals("") && !Float.toString(price).equals("")){
-             boolean flag = adminService.admin_property_publish(admin_name,year, month, price);
+             boolean flag = adminService.admin_property_publish(admin_id,year, month, price);
              if(flag){
                  //发布成功
                  session.setAttribute("property_publish_msg","发布成功，请转至物业账单详情页面查看具体详情");
@@ -209,19 +209,26 @@ public class AdminController {
     }
 
 
-
-
     /**
      * 所有物业账单详情,注意：method = RequestMethod.GET，前后一致，页面也是get
      * @param page
      * @param limit
+     * @param user_name
+     * @param year
+     * @param month
+     * @param session
+     * @param request
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/admin_property_cost_list",method = RequestMethod.GET)
-    public TableData admin_property_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "user_name",required = false,defaultValue = "") String user_name,@RequestParam(value = "year",required = false,defaultValue = "")String year,@RequestParam(value = "month",required = false,defaultValue = "")String month){
+    public TableData admin_property_cost_list(@RequestParam(value = "page",required = false,defaultValue = "1")Integer page, @RequestParam(value = "limit",required = false,defaultValue = "10")Integer limit,@RequestParam(value = "user_name",required = false,defaultValue = "") String user_name,@RequestParam(value = "year",required = false,defaultValue = "")String year,@RequestParam(value = "month",required = false,defaultValue = "")String month,HttpSession session,HttpServletRequest request){
+        //移出发布成功提示信息
+        session.removeAttribute("property_publish_msg");
+
+        int admin_id = (int) request.getSession().getAttribute("id");
         PageHelper.startPage(page,limit);
-        List<Property> AllPropertyCostList = adminService.getAllPropertyCost(user_name,year,month);
+        List<Property> AllPropertyCostList = adminService.getAllPropertyCost(admin_id,user_name,year,month);
         PageInfo<Property> pageInfo = new PageInfo<>(AllPropertyCostList);
         TableData tableData = new TableData();
         tableData.setCode(0);

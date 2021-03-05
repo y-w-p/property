@@ -46,12 +46,16 @@ public class VisitorController {
      * @return
      */
     @RequestMapping("/visitor_registered")
-       public String visitor_registered(String visitor_name, String visitor_password, String visitor_phonenumber, String visitor_carnumber) {
+       public String visitor_registered(String visitor_name, String visitor_password, String visitor_phonenumber, String visitor_carnumber,HttpSession session) {
 
         boolean flag = visitorService.visitorRegistered(visitor_name, visitor_password, visitor_phonenumber, visitor_carnumber);
         if (flag) {
+            //注册成功提示
+            session.setAttribute("registered_msg","注册成功，请登录");
             return "login";
         }
+        //注册失败提示
+        session.setAttribute("registered_msg","注册失败，请按要求重新注册");
         return "visitor/visitor_registered";
     }
 

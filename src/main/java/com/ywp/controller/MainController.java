@@ -89,6 +89,9 @@ public class MainController  {
      */
     @RequestMapping("/mainLogin")
     public String mainLogin(String name, String password, HttpServletRequest request, HttpSession session) {
+        //移出注册提示
+        session.removeAttribute("registered_msg");
+
         String role = request.getParameter("role"); //获取已选择登录的角色
         if (!name.equals("") && !password.equals("")) {
             if (role.equals("业主")) {
@@ -96,10 +99,12 @@ public class MainController  {
                 for (User user : list) {
                     if (user != null) {
                         session.setAttribute("user",user);
-                      session.setAttribute("name",user.getUser_name());
+                        session.setAttribute("name",user.getUser_name());
                         request.getSession().setAttribute("id",user.getUser_id());
                         return "user/user";
                     } else {
+                        //登录失败
+                        session.setAttribute("login_msg","登录失败，请重新输入用户名，密码，以及角色选择无误");
                         return "login";
                     }
                 }
@@ -112,6 +117,8 @@ public class MainController  {
                        request.getSession().setAttribute("id",visitor.getVisitor_id());
                        return "visitor/visitor";
                    } else {
+                       //登录失败
+                       session.setAttribute("login_msg","登录失败，请重新输入正确的用户名，密码，以及角色选择无误");
                        return "login";
                    }
                }
@@ -124,12 +131,17 @@ public class MainController  {
                         request.getSession().setAttribute("id",admin.getAdmin_id());
                         return "admin/admin";
                     }else {
-                        return "login";
+                        //登录失败
+                       session.setAttribute("login_msg","登录失败，请重新输入正确的用户名，密码，以及角色选择无误");
+                       return "login";
                     }
                 }
             }
         }
-        return "login";
+        //登录失败
+      session.setAttribute("login_msg","登录失败，请重新输入正确的用户名，密码，以及角色选择无误");
+      return "login";
+
     }
 
     /**
@@ -142,6 +154,8 @@ public class MainController  {
            try {
                session.removeAttribute("name");
                session.removeAttribute("id");
+               session.removeAttribute("login_msg");
+               session.removeAttribute("registered_msg");
            }catch (Exception e){
            }
 
@@ -158,6 +172,8 @@ public class MainController  {
            try {
                  session.removeAttribute("name");
                  session.removeAttribute("id");
+                 session.removeAttribute("login_msg");
+                 session.removeAttribute("registered_msg");
              }catch (Exception e){
              }
              return "login";

@@ -148,13 +148,14 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 管理员发布物业费用
+     * @param admin_id
      * @param year
      * @param month
      * @param price
      * @return
      */
     @Override
-    public boolean admin_property_publish(String admin_name,String year, String month, float price) {
+    public boolean admin_property_publish(int admin_id,String year, String month, float price) {
         List<User> userAll = adminDao.findUserAll();
         Property property = new Property();
         float money;
@@ -162,7 +163,7 @@ public class AdminServiceImpl implements AdminService {
             //计算金额
             money = Float.valueOf(user.getUser_area()) * price;
 
-            property.setAdmin_name(admin_name);
+            property.setAdmin_id(admin_id);
             property.setUser_id(user.getUser_id());
             property.setYear(year);
             property.setMonth(month);
@@ -177,11 +178,20 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 所有物业账单详情
+     * @param admin_id
+     * @param user_name
+     * @param year
+     * @param month
      * @return
      */
     @Override
-    public List<Property> getAllPropertyCost(String user_name,String year,String month) {
-        List<Property> allPropertyCost = adminDao.getAllPropertyCost(user_name,year,month);
+    public List<Property> getAllPropertyCost(int admin_id,String user_name,String year,String month) {
+        Property property1 = new Property();
+        property1.setAdmin_id(admin_id);
+        property1.setUser_name(user_name);
+        property1.setYear(year);
+        property1.setMonth(month);
+        List<Property> allPropertyCost = adminDao.getAllPropertyCost(property1);
         for (Property property:allPropertyCost){
             if(property.getStatus().equals("0")){
                 property.setStatus("未缴费");

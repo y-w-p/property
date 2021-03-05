@@ -146,12 +146,12 @@
 
     <!--管理员发布物业费用-->
     <insert id="admin_property_publish" parameterType="com.ywp.entity.Property">
-        insert into property(admin_name,user_id,year,month,money,publish_time,status) values (#{admin_name},#{user_id},#{year},#{month},#{money},now(),#{status})
+        insert into property(admin_id,user_id,year,month,money,publish_time,status) values (#{admin_id},#{user_id},#{year},#{month},#{money},now(),#{status})
     </insert>
 
     <!--所有物业账单详情-->
-    <select id="getAllPropertyCost" parameterType="String" resultType="com.ywp.entity.Property">
-        select property_id,admin_name,user_name,year,month,money,publish_time,status from property p,user u where u.user_id = p.user_id
+    <select id="getAllPropertyCost" parameterType="com.ywp.entity.Property" resultType="com.ywp.entity.Property">
+        select property_id,admin_name,user_name,year,month,money,publish_time,status from property p,user u,admin a where u.user_id = p.user_id and a.admin_id = p.admin_id
         <if test="user_name!=null and user_name != ''">
             and user_name like "%"#{user_name}"%"
         </if>
