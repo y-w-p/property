@@ -66,7 +66,7 @@ layui.use(['table','jquery','layer'], function(){
     ,cols: [
         [ //表头
       {field: 'property_id', title: '物业账单号', sort: true}
-      ,{field: 'admin_name', title: '物业管理者'}
+      ,{field: 'user_address', title: '房号'}
       ,{field: 'user_name', title: '业主名称'}
       ,{field: 'year', title: '年份'}
       ,{field: 'month', title: '月份',sort:true}

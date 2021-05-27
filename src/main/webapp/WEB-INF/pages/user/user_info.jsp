@@ -58,11 +58,11 @@
      </div>
     <div class="layui-form-item" >
         <div class="layui-inline">
-           <label class="layui-form-label">家庭住址：</label>
+           <label class="layui-form-label">房间号码：</label>
            <div class="layui-input-inline">
              <input type="text" name="user_address" autocomplete="off" placeholder="${user.user_address}" class="layui-input" value="${user.user_address}">
            </div>
-            <div class="layui-form-mid layui-word-aux">要改，请务必填写家庭住址！！！</div>
+            <div class="layui-form-mid layui-word-aux">要改，请务必填写房间号码！！！</div>
         </div>
      </div>
     <div class="layui-form-item" >

@@ -76,7 +76,7 @@ layui.use(['jquery', 'form', 'table', 'layer', 'tree'], function(){
       ,{field: 'user_name', title: '业主名称',sort:true}
       ,{field: 'user_idcard', title: '身份证号',width:180,sort:true}
       ,{field: 'user_phonenumber', title: '联系电话'}
-      ,{field: 'user_address', title: '家庭住址',sort: true}
+      ,{field: 'user_address', title: '房号',sort: true}
       ,{field: 'user_area', title: '住房面积',width:180,sort: true}
       ,{field: 'user_carnumber', title: '汽车牌号',sort: true}
       ,{fixed: 'right', title:'操作', toolbar: '#barDemo'}

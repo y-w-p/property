@@ -223,7 +223,7 @@
             </p>
 
 
-            <p>家庭住址:<input type="text" name="user_address" placeholder="请输入住址,例如：光明小区9栋601" autocomplete="off" onblur="checkAddress()" id="address"><a href="#" id="addressclass" class=""> </a></br>
+            <p>房间号码:<input type="text" name="user_address" placeholder="请输入房号,例如1栋1楼1号,输入010101" autocomplete="off" onblur="checkAddress()" id="address"><a href="#" id="addressclass" class=""> </a></br>
                <span  style="font-size:13px" id="addressspan"></span>
             </p>
 

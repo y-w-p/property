@@ -13,6 +13,7 @@ public class Property implements Serializable {
     private int property_id;
     private int admin_id;
     private String admin_name;
+    private String user_address;
     private int user_id;
     private String user_name;
     private BigDecimal user_area;
@@ -49,6 +50,14 @@ public class Property implements Serializable {
 
     public void setAdmin_name(String admin_name) {
         this.admin_name = admin_name;
+    }
+
+    public String getUser_address() {
+        return user_address;
+    }
+
+    public void setUser_address(String user_address) {
+        this.user_address = user_address;
     }
 
     public int getUser_id() {
@@ -116,12 +125,14 @@ public class Property implements Serializable {
     }
 
 
+
     @Override
     public String toString() {
         return "Property{" +
                 "property_id=" + property_id +
                 ", admin_id=" + admin_id +
                 ", admin_name='" + admin_name + '\'' +
+                ", user_address='" + user_address + '\'' +
                 ", user_id=" + user_id +
                 ", user_name='" + user_name + '\'' +
                 ", user_area=" + user_area +
